@@ -20,6 +20,7 @@
 
 
 // 2. Highlight the active section in the page title as you scroll
+//    + Track lesson visits in localStorage for progress
 (function () {
   const sections = document.querySelectorAll('.section[data-part]');
   if (!sections.length) return;
@@ -33,6 +34,17 @@
           document.title = title
             ? `Part ${part} — ${title.textContent} | SQL Guide`
             : 'SQL Visual Guide';
+
+          // Track lesson visit
+          try {
+            const saved = localStorage.getItem('sql_playground_progress');
+            const progress = saved ? JSON.parse(saved) : { version: 1, lessonVisits: {}, assignments: {}, queryHistory: [], settings: {} };
+            if (!progress.lessonVisits[part]) {
+              progress.lessonVisits[part] = true;
+              localStorage.setItem('sql_playground_progress', JSON.stringify(progress));
+              updateLessonProgressRing();
+            }
+          } catch (e) {}
         }
       });
     },
@@ -41,6 +53,54 @@
 
   sections.forEach((s) => observer.observe(s));
 })();
+
+
+// 2b. Progress ring display on lesson page
+(function () {
+  updateLessonProgressRing();
+})();
+
+function updateLessonProgressRing() {
+  try {
+    const saved = localStorage.getItem('sql_playground_progress');
+    if (!saved) return;
+    const progress = JSON.parse(saved);
+
+    // Count completed assignments + visited lessons
+    const totalParts = 7;
+    let totalScore = 0;
+
+    // Assignment counts per part
+    const partAssignmentCounts = { 1: 3, 2: 3, 3: 3, 4: 3, 5: 3, 6: 3, 7: 2 };
+
+    for (let p = 1; p <= totalParts; p++) {
+      let partScore = 0;
+      if (progress.lessonVisits && progress.lessonVisits[p]) partScore += 50;
+
+      const count = partAssignmentCounts[p] || 3;
+      let completed = 0;
+      for (let a = 1; a <= count; a++) {
+        const id = p + '-' + a;
+        if (progress.assignments && progress.assignments[id] && progress.assignments[id].completed) {
+          completed++;
+        }
+      }
+      partScore += (completed / count) * 50;
+      totalScore += partScore;
+    }
+
+    const pct = Math.round(totalScore / totalParts);
+    const circumference = 2 * Math.PI * 15.5;
+    const offset = circumference - (pct / 100) * circumference;
+
+    document.querySelectorAll('.progress-ring-fill').forEach((el) => {
+      el.style.strokeDashoffset = offset;
+    });
+    document.querySelectorAll('.progress-label').forEach((el) => {
+      el.textContent = pct + '%';
+    });
+  } catch (e) {}
+}
 
 
 // 3. Copy-to-clipboard on SQL blocks
@@ -94,7 +154,48 @@
 })();
 
 
-// 4. Smooth scroll anchor links (if any are added later)
+// 4. Interactive challenges — pick-an-answer with immediate feedback
+(function () {
+  document.querySelectorAll('.challenge').forEach((challenge) => {
+    const correctAnswer = challenge.dataset.answer;
+    const options = challenge.querySelectorAll('.challenge-opt');
+    const feedbacks = challenge.querySelectorAll('.challenge-feedback');
+
+    options.forEach((opt) => {
+      opt.addEventListener('click', () => {
+        // Prevent re-answering
+        if (challenge.classList.contains('answered')) return;
+        challenge.classList.add('answered');
+
+        const choice = opt.dataset.choice;
+        const isCorrect = choice === correctAnswer;
+
+        // Mark the clicked option
+        opt.classList.add(isCorrect ? 'correct' : 'wrong');
+
+        // If wrong, also highlight the correct one
+        if (!isCorrect) {
+          options.forEach((o) => {
+            if (o.dataset.choice === correctAnswer) o.classList.add('correct');
+          });
+        }
+
+        // Disable all options
+        options.forEach((o) => { o.disabled = true; });
+
+        // Show the appropriate feedback
+        feedbacks.forEach((fb) => {
+          if (fb.dataset.for === choice) {
+            fb.classList.add('visible');
+          }
+        });
+      });
+    });
+  });
+})();
+
+
+// 5. Smooth scroll anchor links (if any are added later)
 document.querySelectorAll('a[href^="#"]').forEach((link) => {
   link.addEventListener('click', (e) => {
     const target = document.querySelector(link.getAttribute('href'));

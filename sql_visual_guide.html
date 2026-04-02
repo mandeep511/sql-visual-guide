@@ -10,6 +10,24 @@
 </head>
 <body>
 <div id="progress-bar"></div>
+
+<!-- ═══════════════ NAV BAR ═══════════════ -->
+<nav class="site-nav">
+  <a href="sql_visual_guide.html" class="site-nav-logo">SQL Guide</a>
+  <div class="site-nav-links">
+    <a href="sql_visual_guide.html" class="site-nav-link active">Lessons</a>
+    <a href="playground.html" class="site-nav-link">Playground</a>
+  </div>
+  <div class="site-nav-progress">
+    <svg class="progress-ring" viewBox="0 0 36 36">
+      <circle class="progress-ring-bg" cx="18" cy="18" r="15.5" fill="none" stroke-width="3"/>
+      <circle class="progress-ring-fill" cx="18" cy="18" r="15.5" fill="none" stroke-width="3"
+              stroke-dasharray="97.4" stroke-dashoffset="97.4"/>
+    </svg>
+    <span class="progress-label">0%</span>
+  </div>
+</nav>
+
 <div class="container">
 
 <!-- ═══════════════ HEADER ═══════════════ -->
@@ -26,6 +44,65 @@
     <strong>These are NOT fixed words.</strong> They are names that someone made up when they created the database. Your database will have <em>completely different names</em> — like <code style="color:var(--green)">customer_name</code>, <code style="color:var(--green)">order_total</code>, or <code style="color:var(--green)">products</code>.<br><br>
     The only words that are fixed are the <strong style="color:var(--blue)">blue words</strong> — those are SQL commands (<code class="kw">SELECT</code>, <code class="kw">FROM</code>, <code class="kw">WHERE</code>, etc.). Everything else changes depending on your data.
   </p>
+</div>
+
+<!-- ═══════════════ WRITING RULES ═══════════════ -->
+<div class="card" style="margin-bottom:2rem;">
+  <div style="font-size:15px;font-family:var(--font-display);font-weight:500;color:var(--text);margin-bottom:12px;">SQL writing rules — the small stuff that trips everyone up</div>
+
+  <div class="rules-grid">
+    <div class="rule-card">
+      <div class="rule-card-label rc-green">Names (tables &amp; columns)</div>
+      <div class="rule-card-body">
+        No spaces allowed. Use underscores.<br>
+        <code class="good">first_name</code> <code class="good">order_total</code><br>
+        <code class="bad">first name</code> <code class="bad">order total</code><br>
+        <span style="font-size:11px;color:var(--text-faint);margin-top:3px;display:block;">Don't put quotes around names.</span>
+      </div>
+    </div>
+    <div class="rule-card">
+      <div class="rule-card-label rc-amber">Text values</div>
+      <div class="rule-card-body">
+        Always wrap in <strong>single quotes</strong>.<br>
+        <code class="good">'Mumbai'</code> <code class="good">'West'</code><br>
+        <code class="bad">"Mumbai"</code> <code class="bad">Mumbai</code><br>
+        <span style="font-size:11px;color:var(--text-faint);margin-top:3px;display:block;">SQL uses single quotes <code class="neutral">'</code>, not double <code class="neutral">"</code>.</span>
+      </div>
+    </div>
+    <div class="rule-card">
+      <div class="rule-card-label rc-blue">Numbers</div>
+      <div class="rule-card-body">
+        Just type the number. No quotes.<br>
+        <code class="good">500000</code> <code class="good">90</code><br>
+        <code class="bad">'500000'</code> <code class="bad">"90"</code><br>
+        <span style="font-size:11px;color:var(--text-faint);margin-top:3px;display:block;">No commas either — write <code class="neutral">500000</code> not <code class="neutral">500,000</code>.</span>
+      </div>
+    </div>
+    <div class="rule-card">
+      <div class="rule-card-label rc-rose">Equals sign</div>
+      <div class="rule-card-body">
+        SQL uses a single <code class="good">=</code> for "equals".<br>
+        Not <code class="bad">==</code> (that's other languages).<br>
+        <span style="font-size:11px;color:var(--text-faint);margin-top:3px;display:block;"><code class="neutral">WHERE city = 'Mumbai'</code> is correct.</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="tip"><span>These rules apply everywhere in SQL. You'll use them in <strong>every single query</strong> you write. Come back to this box whenever you're unsure.</span></div>
+</div>
+
+<!-- Challenge: naming rules -->
+<div class="challenge" data-answer="b">
+  <div class="challenge-label">Check yourself</div>
+  <div class="challenge-q">Which of these is a valid column name in SQL?</div>
+  <div class="challenge-options">
+    <button class="challenge-opt" data-choice="a"><code>first name</code></button>
+    <button class="challenge-opt" data-choice="b"><code>first_name</code></button>
+    <button class="challenge-opt" data-choice="c"><code>'first_name'</code></button>
+  </div>
+  <div class="challenge-feedback fb-wrong" data-for="a">Column names can't have spaces. SQL would think <code>first</code> and <code>name</code> are two separate things. Use an underscore: <code>first_name</code></div>
+  <div class="challenge-feedback fb-correct" data-for="b">Correct! Column names use underscores instead of spaces, and don't need quotes around them.</div>
+  <div class="challenge-feedback fb-wrong" data-for="c">Quotes are for text <em>values</em> (like <code>'Mumbai'</code>), not for column names. Just write <code>first_name</code> without quotes.</div>
 </div>
 
 <!-- ═══════════════ 1. SELECT + FROM ═══════════════ -->
@@ -46,6 +123,48 @@
     <div class="note-row"><div class="note-dot"></div><div><span class="tag tag-note">;</span> <span class="note-text">Semicolon = full stop. It tells SQL "I'm done writing my query".</span></div></div>
 
     <div class="analogy">You have an Excel sheet. You want to see only some columns. You'd hide the rest. SELECT does exactly that — it picks which columns to display.</div>
+
+    <div class="tip"><span><strong>SELECT + FROM is the only required pair.</strong> Every other keyword you'll learn (WHERE, ORDER BY, LIMIT, etc.) is optional — you add them only when you need them.</span></div>
+  </div>
+
+  <!-- SQL formatting rules -->
+  <div class="card">
+    <div style="font-size:14px;font-weight:500;margin-bottom:10px;">Things SQL does NOT care about</div>
+    <div class="rules-grid">
+      <div class="rule-card">
+        <div class="rule-card-label rc-blue">Upper or lower case</div>
+        <div class="rule-card-body">
+          <code class="good">SELECT</code> = <code class="good">select</code> = <code class="good">Select</code><br>
+          <span style="font-size:11px;color:var(--text-faint);display:block;margin-top:3px;">All the same to SQL. We use UPPERCASE for keywords by habit — it makes them easier to spot. But it's not required.</span>
+        </div>
+      </div>
+      <div class="rule-card">
+        <div class="rule-card-label rc-blue">Line breaks &amp; spacing</div>
+        <div class="rule-card-body">
+          You can write a query on one line or spread across ten.<br>
+          <span style="font-size:11px;color:var(--text-faint);display:block;margin-top:3px;">SQL ignores extra spaces and line breaks. We use multiple lines to make it readable for humans.</span>
+        </div>
+      </div>
+    </div>
+    <div style="font-size:14px;font-weight:500;margin:14px 0 10px;">Things SQL DOES care about</div>
+    <div class="rules-grid">
+      <div class="rule-card">
+        <div class="rule-card-label rc-rose">Commas between columns</div>
+        <div class="rule-card-body">
+          <code class="good">SELECT name, age, city</code><br>
+          <code class="bad">SELECT name age city</code><br>
+          <span style="font-size:11px;color:var(--text-faint);display:block;margin-top:3px;">Commas separate column names. No comma after the <em>last</em> column.</span>
+        </div>
+      </div>
+      <div class="rule-card">
+        <div class="rule-card-label rc-rose">Exact column names</div>
+        <div class="rule-card-body">
+          If the column is called <code class="neutral">first_name</code>, you must write exactly that.<br>
+          <code class="bad">firstname</code> <code class="bad">first name</code> <code class="bad">First_Name</code><br>
+          <span style="font-size:11px;color:var(--text-faint);display:block;margin-top:3px;">Typos = error. Check the schema for exact spelling.</span>
+        </div>
+      </div>
+    </div>
   </div>
 
   <div class="card">
@@ -61,6 +180,7 @@
         <tr><td>Karan Bose</td><td>West</td><td>1,200,000</td></tr>
       </tbody></table>
     </div>
+    <div class="tip"><span>The columns appear in the <strong>order you listed them</strong>. If you wrote <code>SELECT region, lead_name</code>, region would be the first column. You control the layout.</span></div>
   </div>
 
   <div class="swap-box">
@@ -68,6 +188,26 @@
     <div class="swap-block"><span class="kw">SELECT</span> <span class="col">product_name</span>, <span class="col">price</span>
 <span class="kw">FROM</span>   <span class="col">products</span>;</div>
     <div style="font-size:12px;color:#8a7740;margin-top:6px;">See? Different table, different columns. The <em>pattern</em> is the same. Only the <span style="color:var(--green)">green names</span> changed.</div>
+  </div>
+
+  <!-- Challenge: commas -->
+  <div class="challenge" data-answer="b">
+    <div class="challenge-label">Check yourself</div>
+    <div class="challenge-q">You want to see <code>first_name</code>, <code>email</code>, and <code>city</code> from a <code>customers</code> table. Which query is correct?</div>
+    <div class="challenge-options">
+      <button class="challenge-opt" data-choice="a"><code>SELECT first_name email city FROM customers;</code></button>
+      <button class="challenge-opt" data-choice="b"><code>SELECT first_name, email, city FROM customers;</code></button>
+      <button class="challenge-opt" data-choice="c"><code>SELECT first_name, email, city, FROM customers;</code></button>
+    </div>
+    <div class="challenge-feedback fb-wrong" data-for="a">Column names need commas between them! Without commas, SQL doesn't know where one name ends and the next begins.</div>
+    <div class="challenge-feedback fb-correct" data-for="b">Correct! Commas separate each column name. No comma after the last column (<code>city</code>) — the next word is the keyword <code>FROM</code>.</div>
+    <div class="challenge-feedback fb-wrong" data-for="c">Almost! But there's an extra comma after <code>city,</code>. The last column before FROM should NOT have a trailing comma. Remove that final comma.</div>
+  </div>
+
+  <div class="playground-cta">
+    <span class="playground-cta-icon">&#9655;</span>
+    <div><strong>Practice this in the Playground</strong><p>3 assignments for SELECT + FROM</p></div>
+    <a href="playground.html?part=1" class="playground-cta-btn">Open Playground</a>
   </div>
 </div>
 
@@ -93,10 +233,48 @@
     <div class="note-row"><div class="note-dot"></div><div><span class="tag tag-note">'text'</span> <span class="note-text">Text values must be wrapped in single quotes. Numbers don't need quotes.</span></div></div>
 
     <div class="analogy">Excel's Filter button. Click a column, pick a value, and only matching rows stay visible. WHERE does the same thing — but you type the filter instead of clicking it.</div>
+
+    <div class="tip"><span><strong>WHERE is optional.</strong> If you leave it out, you get ALL rows. You only add WHERE when you want to narrow things down.</span></div>
+  </div>
+
+  <!-- Operators reference card -->
+  <div class="card">
+    <div style="font-size:14px;font-weight:500;margin-bottom:10px;">Comparison operators — what each symbol means</div>
+    <table class="op-table">
+      <tr><td class="op-symbol">=</td><td class="op-meaning">equals</td><td class="op-example">WHERE city = 'Mumbai'</td></tr>
+      <tr><td class="op-symbol">!=</td><td class="op-meaning">not equal to</td><td class="op-example">WHERE status != 'cancelled'</td></tr>
+      <tr><td class="op-symbol">&gt;</td><td class="op-meaning">greater than</td><td class="op-example">WHERE price > 100</td></tr>
+      <tr><td class="op-symbol">&lt;</td><td class="op-meaning">less than</td><td class="op-example">WHERE age < 30</td></tr>
+      <tr><td class="op-symbol">&gt;=</td><td class="op-meaning">greater than or equal to</td><td class="op-example">WHERE score >= 90</td></tr>
+      <tr><td class="op-symbol">&lt;=</td><td class="op-meaning">less than or equal to</td><td class="op-example">WHERE salary <= 50000</td></tr>
+    </table>
+    <div class="tip"><span><code>=</code> means "equals" in SQL. Don't use <code>==</code> — that's from other programming languages. In SQL, one <code>=</code> is enough.</span></div>
+    <div class="tip"><span><strong>Text on the right side always needs single quotes.</strong> Numbers never do. <code>= 'West'</code> vs <code>> 500000</code>.</span></div>
+  </div>
+
+  <!-- Filtering different types of data -->
+  <div class="card">
+    <div style="font-size:14px;font-weight:500;margin-bottom:10px;">Filtering different types of data</div>
+    <p style="font-size:13px;color:var(--text-soft);margin-bottom:12px;line-height:1.6;">The right side of the comparison changes depending on what kind of data the column holds:</p>
+
+    <div style="font-size:12px;color:var(--text-faint);font-weight:600;text-transform:uppercase;letter-spacing:.04em;margin-bottom:6px;">Filtering text — always use single quotes</div>
+    <div class="sql-block" style="margin-bottom:10px;"><span class="kw">WHERE</span> <span class="col">region</span> = <span class="val">'West'</span>           <span class="cmt">-- text value in single quotes</span>
+<span class="kw">WHERE</span> <span class="col">status</span> = <span class="val">'completed'</span>      <span class="cmt">-- another text value</span>
+<span class="kw">WHERE</span> <span class="col">city</span>   != <span class="val">'Mumbai'</span>         <span class="cmt">-- not equal to Mumbai</span></div>
+
+    <div style="font-size:12px;color:var(--text-faint);font-weight:600;text-transform:uppercase;letter-spacing:.04em;margin-bottom:6px;">Filtering numbers — no quotes</div>
+    <div class="sql-block" style="margin-bottom:10px;"><span class="kw">WHERE</span> <span class="col">deal_value</span> &gt; <span class="val">500000</span>        <span class="cmt">-- number, no quotes, no commas</span>
+<span class="kw">WHERE</span> <span class="col">age</span>        &gt;= <span class="val">18</span>            <span class="cmt">-- another number</span>
+<span class="kw">WHERE</span> <span class="col">quantity</span>   = <span class="val">0</span>              <span class="cmt">-- zero is still a number</span></div>
+
+    <div style="font-size:12px;color:var(--text-faint);font-weight:600;text-transform:uppercase;letter-spacing:.04em;margin-bottom:6px;">Filtering dates — single quotes (they look like text to SQL)</div>
+    <div class="sql-block"><span class="kw">WHERE</span> <span class="col">order_date</span> &gt; <span class="val">'2024-01-01'</span>   <span class="cmt">-- after Jan 1, 2024</span>
+<span class="kw">WHERE</span> <span class="col">hire_date</span>  = <span class="val">'2023-06-15'</span>   <span class="cmt">-- exact date match</span></div>
+    <div class="tip"><span>Dates are written in <code>'YYYY-MM-DD'</code> format (year-month-day) with single quotes. <code>'2024-01-15'</code> means January 15, 2024.</span></div>
   </div>
 
   <div class="card">
-    <div style="font-size:12px;color:var(--text-faint);font-weight:600;text-transform:uppercase;letter-spacing:.04em;margin-bottom:8px;">Example</div>
+    <div style="font-size:12px;color:var(--text-faint);font-weight:600;text-transform:uppercase;letter-spacing:.04em;margin-bottom:8px;">Example — putting it together</div>
     <div class="sql-block"><span class="kw">SELECT</span> <span class="col">lead_name</span>, <span class="col">deal_value</span>
 <span class="kw">FROM</span>   <span class="col">leads</span>
 <span class="kw">WHERE</span>  <span class="col">region</span> = <span class="val">'West'</span>
@@ -111,6 +289,22 @@
         <tr><td>Karan Bose</td><td>West</td><td>1,200,000</td><td><span class="kept">kept</span></td></tr>
       </tbody></table>
     </div>
+    <div class="tip"><span>Notice the first condition compares <strong>text</strong> (with quotes: <code>'West'</code>) and the second compares a <strong>number</strong> (without quotes: <code>500000</code>). Both are in the same WHERE clause.</span></div>
+  </div>
+
+  <!-- Common mistakes card -->
+  <div class="card">
+    <div style="font-size:14px;font-weight:500;margin-bottom:10px;color:var(--rose);">Common mistakes beginners make with WHERE</div>
+    <table class="tbl">
+      <thead><tr><th style="width:45%">Wrong</th><th style="width:45%">Right</th><th>Why</th></tr></thead>
+      <tbody>
+        <tr><td><code class="bad">WHERE city = Mumbai</code></td><td><code class="good">WHERE city = 'Mumbai'</code></td><td style="font-size:11px;color:var(--text-soft)">Text needs quotes</td></tr>
+        <tr><td><code class="bad">WHERE price > '100'</code></td><td><code class="good">WHERE price > 100</code></td><td style="font-size:11px;color:var(--text-soft)">Numbers don't need quotes</td></tr>
+        <tr><td><code class="bad">WHERE status == 'active'</code></td><td><code class="good">WHERE status = 'active'</code></td><td style="font-size:11px;color:var(--text-soft)">Single = in SQL</td></tr>
+        <tr><td><code class="bad">WHERE price > 1,000</code></td><td><code class="good">WHERE price > 1000</code></td><td style="font-size:11px;color:var(--text-soft)">No commas in numbers</td></tr>
+        <tr><td><code class="bad">WHERE city = "Mumbai"</code></td><td><code class="good">WHERE city = 'Mumbai'</code></td><td style="font-size:11px;color:var(--text-soft)">Single quotes, not double</td></tr>
+      </tbody>
+    </table>
   </div>
 
   <div class="swap-box">
@@ -119,6 +313,80 @@
 <span class="kw">FROM</span>   <span class="col">exam_results</span>
 <span class="kw">WHERE</span>  <span class="col">marks</span> &gt;= <span class="val">90</span>;</div>
     <div style="font-size:12px;color:#8a7740;margin-top:6px;">Completely different table and columns. The pattern is identical — <code class="kw">SELECT</code> → <code class="kw">FROM</code> → <code class="kw">WHERE</code>.</div>
+  </div>
+
+  <!-- Challenge: date quoting -->
+  <div class="challenge" data-answer="c">
+    <div class="challenge-label">Check yourself</div>
+    <div class="challenge-q">You want orders placed after January 1st, 2024. Which is correct?</div>
+    <div class="challenge-options">
+      <button class="challenge-opt" data-choice="a"><code>WHERE order_date > 2024-01-01</code></button>
+      <button class="challenge-opt" data-choice="b"><code>WHERE order_date > 'January 1, 2024'</code></button>
+      <button class="challenge-opt" data-choice="c"><code>WHERE order_date > '2024-01-01'</code></button>
+    </div>
+    <div class="challenge-feedback fb-wrong" data-for="a">Dates need single quotes, just like text. Without quotes, SQL reads <code>2024-01-01</code> as a maths expression (2024 minus 01 minus 01 = 2022) — not a date!</div>
+    <div class="challenge-feedback fb-wrong" data-for="b">Dates must be in <code>YYYY-MM-DD</code> format, not written out in words. Use <code>'2024-01-01'</code> — year first, then month, then day, separated by dashes.</div>
+    <div class="challenge-feedback fb-correct" data-for="c">Correct! Dates go in single quotes using <code>'YYYY-MM-DD'</code> format. Year-month-day, always.</div>
+  </div>
+
+  <!-- Challenge: quoting text values -->
+  <div class="challenge" data-answer="b">
+    <div class="challenge-label">Check yourself</div>
+    <div class="challenge-q">You want customers from Mumbai. Which WHERE clause is correct?</div>
+    <div class="challenge-options">
+      <button class="challenge-opt" data-choice="a"><code>WHERE city = Mumbai</code></button>
+      <button class="challenge-opt" data-choice="b"><code>WHERE city = 'Mumbai'</code></button>
+      <button class="challenge-opt" data-choice="c"><code>WHERE city = "Mumbai"</code></button>
+    </div>
+    <div class="challenge-feedback fb-wrong" data-for="a">Text values must be in quotes. Without quotes, SQL thinks <code>Mumbai</code> is a column name and gets confused.</div>
+    <div class="challenge-feedback fb-correct" data-for="b">Correct! Text values always go in single quotes. <code>'Mumbai'</code>, <code>'West'</code>, <code>'completed'</code> — always single.</div>
+    <div class="challenge-feedback fb-wrong" data-for="c">Close! But SQL uses <strong>single quotes</strong> <code>'Mumbai'</code>, not double quotes. Double quotes have a different meaning in SQL (they're for column names with special characters — rare and advanced).</div>
+  </div>
+
+  <!-- Challenge: numbers don't need quotes -->
+  <div class="challenge" data-answer="b">
+    <div class="challenge-label">Check yourself</div>
+    <div class="challenge-q">You want orders where the amount is more than 1000. Which is correct?</div>
+    <div class="challenge-options">
+      <button class="challenge-opt" data-choice="a"><code>WHERE amount > '1000'</code></button>
+      <button class="challenge-opt" data-choice="b"><code>WHERE amount > 1000</code></button>
+      <button class="challenge-opt" data-choice="c"><code>WHERE amount == 1000</code></button>
+    </div>
+    <div class="challenge-feedback fb-wrong" data-for="a">Numbers don't need quotes! Just write <code>> 1000</code>. Quotes are only for text like <code>'Mumbai'</code>.</div>
+    <div class="challenge-feedback fb-correct" data-for="b">Correct! Numbers go without quotes. And <code>></code> means "greater than" — exactly like in maths.</div>
+    <div class="challenge-feedback fb-wrong" data-for="c">Two problems: SQL uses <code>=</code> not <code>==</code> for equals, and you wanted "more than" which is <code>></code> not <code>=</code>. The correct answer is <code>> 1000</code>.</div>
+  </div>
+
+  <!-- Challenge: WHERE is optional (break the pattern) -->
+  <div class="challenge" data-answer="b">
+    <div class="challenge-label">Check yourself</div>
+    <div class="challenge-q">You want to see ALL customers, no filtering at all. Which query works?</div>
+    <div class="challenge-options">
+      <button class="challenge-opt" data-choice="a"><code>SELECT * FROM customers WHERE all;</code></button>
+      <button class="challenge-opt" data-choice="b"><code>SELECT * FROM customers;</code></button>
+      <button class="challenge-opt" data-choice="c"><code>SELECT * FROM customers WHERE *;</code></button>
+    </div>
+    <div class="challenge-feedback fb-wrong" data-for="a"><code>WHERE all</code> isn't valid SQL. There's no "all" keyword for WHERE. If you don't want a filter — just leave WHERE out entirely!</div>
+    <div class="challenge-feedback fb-correct" data-for="b">Correct! If you want all rows, just don't write WHERE at all. SELECT + FROM is all you need. WHERE is optional.</div>
+    <div class="challenge-feedback fb-wrong" data-for="c"><code>WHERE *</code> isn't valid. The <code>*</code> star only works with SELECT (meaning "all columns"). To get all rows, simply remove the WHERE line.</div>
+  </div>
+
+  <!-- Challenge: AND is not required with WHERE -->
+  <div class="challenge" data-answer="a">
+    <div class="challenge-label">Check yourself</div>
+    <div class="challenge-q">The example above uses <code>WHERE ... AND ...</code>. Does WHERE always need AND?</div>
+    <div class="challenge-options">
+      <button class="challenge-opt" data-choice="a">No — AND is optional. You can have just one condition.</button>
+      <button class="challenge-opt" data-choice="b">Yes — WHERE always needs at least one AND.</button>
+    </div>
+    <div class="challenge-feedback fb-correct" data-for="a">Exactly! <code>WHERE region = 'West'</code> works perfectly by itself. AND is only used when you need <em>multiple</em> conditions. One condition is completely fine.</div>
+    <div class="challenge-feedback fb-wrong" data-for="b">Nope! <code>WHERE region = 'West'</code> works perfectly with just one condition. AND is only used when you want to combine two or more conditions together.</div>
+  </div>
+
+  <div class="playground-cta">
+    <span class="playground-cta-icon">&#9655;</span>
+    <div><strong>Practice this in the Playground</strong><p>3 assignments for WHERE</p></div>
+    <a href="playground.html?part=2" class="playground-cta-btn">Open Playground</a>
   </div>
 </div>
 
@@ -137,63 +405,110 @@
     </div>
 
     <div class="pattern-label">The pattern</div>
-    <div class="pattern-block"><span class="kw">SELECT</span>  <span class="kw">FUNCTION_NAME</span>(<span class="placeholder">column_name</span>)
+    <div class="pattern-block"><span class="kw">SELECT</span>  <span class="kw">FUNCTION_NAME</span>(<span class="placeholder">any_column</span>)
 <span class="kw">FROM</span>    <span class="placeholder">table_name</span>;</div>
-    <div style="font-size:12px;color:var(--text-soft);margin:6px 0 4px;">You replace <span class="placeholder" style="font-size:12px">column_name</span> with whatever column you want to calculate on.</div>
+
+    <div style="font-size:12px;color:var(--text-soft);margin:8px 0 4px;line-height:1.6;">
+      <span class="placeholder" style="font-size:12px">any_column</span> means <strong>any column from your table</strong> — not just columns with "name" in them.
+      It could be <code class="col">deal_value</code>, <code class="col">region</code>, <code class="col">hire_date</code>, <code class="col">salary</code> — literally any column.
+    </div>
+
+    <div style="font-size:12px;color:var(--text-faint);font-weight:600;text-transform:uppercase;letter-spacing:.04em;margin:12px 0 6px;">Immediate example</div>
+    <div class="two-col">
+      <div>
+        <div class="sql-block" style="margin:0;font-size:12px;"><span class="kw">SELECT</span> <span class="kw">COUNT</span>(<span class="col">lead_name</span>)
+<span class="kw">FROM</span>   <span class="col">leads</span>;</div>
+        <div style="font-size:11px;color:var(--text-faint);margin-top:4px;">Returns → <strong style="color:var(--purple)">4</strong> (counts all lead names)</div>
+      </div>
+      <div>
+        <div class="sql-block" style="margin:0;font-size:12px;"><span class="kw">SELECT</span> <span class="kw">SUM</span>(<span class="col">deal_value</span>)
+<span class="kw">FROM</span>   <span class="col">leads</span>;</div>
+        <div style="font-size:11px;color:var(--text-faint);margin-top:4px;">Returns → <strong style="color:var(--purple)">4,150,000</strong> (adds up all deals)</div>
+      </div>
+    </div>
+
+    <div class="tip"><span>Aggregate functions work with just <code>SELECT</code> + <code>FROM</code>. You <strong>don't need</strong> WHERE or GROUP BY to use them — those are separate, optional features.</span></div>
+  </div>
+
+  <!-- Which function works with what -->
+  <div class="card">
+    <div style="font-size:14px;font-weight:500;margin-bottom:6px;">Which function works with which type of data?</div>
+    <p style="font-size:13px;color:var(--text-soft);margin-bottom:12px;line-height:1.6;">Columns hold different types of data — numbers, text, dates. Not every function works with every type.</p>
+
+    <table class="tbl">
+      <thead><tr><th>Function</th><th style="text-align:center">Numbers<br><span style="font-size:9px;font-weight:400;text-transform:none;">salary, price, age</span></th><th style="text-align:center">Text<br><span style="font-size:9px;font-weight:400;text-transform:none;">name, city, status</span></th><th style="text-align:center">Dates<br><span style="font-size:9px;font-weight:400;text-transform:none;">hire_date, order_date</span></th></tr></thead>
+      <tbody>
+        <tr><td><code class="kw">COUNT( )</code></td><td style="text-align:center;color:var(--green);font-weight:600;">Yes</td><td style="text-align:center;color:var(--green);font-weight:600;">Yes</td><td style="text-align:center;color:var(--green);font-weight:600;">Yes</td></tr>
+        <tr><td><code class="kw">SUM( )</code></td><td style="text-align:center;color:var(--green);font-weight:600;">Yes</td><td style="text-align:center;color:var(--rose);font-weight:600;">No</td><td style="text-align:center;color:var(--rose);font-weight:600;">No</td></tr>
+        <tr><td><code class="kw">AVG( )</code></td><td style="text-align:center;color:var(--green);font-weight:600;">Yes</td><td style="text-align:center;color:var(--rose);font-weight:600;">No</td><td style="text-align:center;color:var(--rose);font-weight:600;">No</td></tr>
+        <tr><td><code class="kw">MIN( )</code></td><td style="text-align:center;color:var(--green);font-weight:600;">Yes</td><td style="text-align:center;color:var(--green);font-weight:600;">Yes</td><td style="text-align:center;color:var(--green);font-weight:600;">Yes</td></tr>
+        <tr><td><code class="kw">MAX( )</code></td><td style="text-align:center;color:var(--green);font-weight:600;">Yes</td><td style="text-align:center;color:var(--green);font-weight:600;">Yes</td><td style="text-align:center;color:var(--green);font-weight:600;">Yes</td></tr>
+      </tbody>
+    </table>
+
+    <div class="tip"><span><strong>COUNT works on anything</strong> — it just counts rows. It doesn't care if the column holds names, numbers, or dates.</span></div>
+    <div class="tip"><span><strong>SUM and AVG only work on numbers.</strong> You can't add up city names or average a list of dates. If you try, SQL gives an error.</span></div>
+    <div class="tip"><span><strong>MIN and MAX work on anything.</strong> For numbers: smallest/largest. For text: alphabetically first/last (<code>'Apple'</code> &lt; <code>'Banana'</code>). For dates: earliest/latest.</span></div>
   </div>
 
   <!-- Individual function cards -->
-  <div style="margin-top:6px;font-size:14px;font-weight:500;color:var(--text);margin-bottom:10px;">Let's look at each one using this sample data:</div>
+  <div style="margin-top:6px;font-size:14px;font-weight:500;color:var(--text);margin-bottom:10px;">Let's see each one in action with this sample data:</div>
 
   <div class="card" style="padding:1rem;">
     <div class="tbl-title">leads table (4 rows)</div>
-    <table class="tbl"><thead><tr><th>lead_name</th><th>region</th><th>deal_value</th></tr></thead><tbody>
-      <tr><td>Riya Mehta</td><td>West</td><td>800,000</td></tr>
-      <tr><td>Arjun Nair</td><td>North</td><td>1,500,000</td></tr>
-      <tr><td>Priya Shah</td><td>South</td><td>650,000</td></tr>
-      <tr><td>Karan Bose</td><td>West</td><td>1,200,000</td></tr>
+    <table class="tbl"><thead><tr><th>lead_name</th><th>region</th><th>deal_value</th><th>signup_date</th></tr></thead><tbody>
+      <tr><td>Riya Mehta</td><td>West</td><td>800,000</td><td>2024-01-15</td></tr>
+      <tr><td>Arjun Nair</td><td>North</td><td>1,500,000</td><td>2023-06-20</td></tr>
+      <tr><td>Priya Shah</td><td>South</td><td>650,000</td><td>2024-03-08</td></tr>
+      <tr><td>Karan Bose</td><td>West</td><td>1,200,000</td><td>2023-11-01</td></tr>
     </tbody></table>
+    <div style="font-size:11px;color:var(--text-faint);margin-top:6px;">Notice: this table has numbers (<code>deal_value</code>), text (<code>lead_name</code>, <code>region</code>), and dates (<code>signup_date</code>).</div>
   </div>
 
   <div class="fn-grid">
     <!-- COUNT -->
     <div class="fn-card">
       <div class="fn-card-name">COUNT( )</div>
-      <div class="fn-card-desc">Counts how many rows there are.</div>
+      <div class="fn-card-desc">Counts how many rows there are. Works on <strong>any column</strong>.</div>
       <div class="fn-card-example"><span class="kw">SELECT</span> <span class="kw">COUNT</span>(*)
 <span class="kw">FROM</span>   <span class="col">leads</span>;</div>
       <div class="fn-card-result">Returns → <strong>4</strong></div>
-      <div style="font-size:11px;color:var(--text-faint);margin-top:4px;"><code>COUNT(*)</code> counts all rows. <code>COUNT(column)</code> skips empty cells.</div>
+      <div style="font-size:11px;color:var(--text-faint);margin-top:4px;"><code>COUNT(*)</code> counts all rows. <code>COUNT(region)</code> also returns 4 — it counts any column. <code>COUNT(column)</code> skips empty (NULL) cells.</div>
     </div>
 
     <!-- SUM -->
     <div class="fn-card">
       <div class="fn-card-name">SUM( )</div>
-      <div class="fn-card-desc">Adds up all the values in a column.</div>
+      <div class="fn-card-desc">Adds up all the values. <strong>Numbers only.</strong></div>
       <div class="fn-card-example"><span class="kw">SELECT</span> <span class="kw">SUM</span>(<span class="col">deal_value</span>)
 <span class="kw">FROM</span>   <span class="col">leads</span>;</div>
       <div class="fn-card-result">Returns → <strong>4,150,000</strong></div>
       <div style="font-size:11px;color:var(--text-faint);margin-top:4px;">800k + 1500k + 650k + 1200k = 4,150,000</div>
+      <div style="font-size:11px;color:var(--rose);margin-top:2px;"><code>SUM(lead_name)</code> would give an error — you can't add text.</div>
     </div>
 
     <!-- AVG -->
     <div class="fn-card">
       <div class="fn-card-name">AVG( )</div>
-      <div class="fn-card-desc">Calculates the average (mean).</div>
+      <div class="fn-card-desc">Calculates the average (mean). <strong>Numbers only.</strong></div>
       <div class="fn-card-example"><span class="kw">SELECT</span> <span class="kw">AVG</span>(<span class="col">deal_value</span>)
 <span class="kw">FROM</span>   <span class="col">leads</span>;</div>
       <div class="fn-card-result">Returns → <strong>1,037,500</strong></div>
       <div style="font-size:11px;color:var(--text-faint);margin-top:4px;">4,150,000 ÷ 4 rows = 1,037,500</div>
+      <div style="font-size:11px;color:var(--rose);margin-top:2px;"><code>AVG(region)</code> would give an error — you can't average text.</div>
     </div>
 
     <!-- MIN -->
     <div class="fn-card">
       <div class="fn-card-name">MIN( )</div>
-      <div class="fn-card-desc">Finds the smallest value.</div>
+      <div class="fn-card-desc">Finds the smallest/earliest/first value. Works on <strong>any type</strong>.</div>
       <div class="fn-card-example"><span class="kw">SELECT</span> <span class="kw">MIN</span>(<span class="col">deal_value</span>)
 <span class="kw">FROM</span>   <span class="col">leads</span>;</div>
-      <div class="fn-card-result">Returns → <strong>650,000</strong></div>
-      <div style="font-size:11px;color:var(--text-faint);margin-top:4px;">The smallest deal_value in the table.</div>
+      <div class="fn-card-result">Returns → <strong>650,000</strong> <span style="font-size:10px;color:var(--text-faint)">(smallest number)</span></div>
+      <div style="font-size:11px;color:var(--text-faint);margin-top:6px;">
+        <code>MIN(lead_name)</code> → <strong>Arjun Nair</strong> (alphabetically first)<br>
+        <code>MIN(signup_date)</code> → <strong>2023-06-20</strong> (earliest date)
+      </div>
     </div>
 
     <!-- MAX -->
@@ -201,10 +516,14 @@
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;align-items:start;">
         <div>
           <div class="fn-card-name">MAX( )</div>
-          <div class="fn-card-desc">Finds the largest value.</div>
+          <div class="fn-card-desc">Finds the largest/latest/last value. Works on <strong>any type</strong>.</div>
           <div class="fn-card-example"><span class="kw">SELECT</span> <span class="kw">MAX</span>(<span class="col">deal_value</span>)
 <span class="kw">FROM</span>   <span class="col">leads</span>;</div>
-          <div class="fn-card-result">Returns → <strong>1,500,000</strong></div>
+          <div class="fn-card-result">Returns → <strong>1,500,000</strong> <span style="font-size:10px;color:var(--text-faint)">(largest number)</span></div>
+          <div style="font-size:11px;color:var(--text-faint);margin-top:6px;">
+            <code>MAX(lead_name)</code> → <strong>Riya Mehta</strong> (alphabetically last)<br>
+            <code>MAX(signup_date)</code> → <strong>2024-03-08</strong> (most recent date)
+          </div>
         </div>
         <div class="swap-box" style="margin:0;">
           <div class="swap-box-label">Same functions, different data</div>
@@ -214,6 +533,20 @@
         </div>
       </div>
     </div>
+  </div>
+
+  <!-- What-if: wrong function on wrong type -->
+  <div class="challenge" data-answer="b">
+    <div class="challenge-label">Check yourself</div>
+    <div class="challenge-q">Your table has a column called <code>city</code> (text like 'Mumbai', 'Delhi'). Which of these will work?</div>
+    <div class="challenge-options">
+      <button class="challenge-opt" data-choice="a"><code>SELECT SUM(city) FROM customers;</code></button>
+      <button class="challenge-opt" data-choice="b"><code>SELECT COUNT(city) FROM customers;</code></button>
+      <button class="challenge-opt" data-choice="c"><code>SELECT AVG(city) FROM customers;</code></button>
+    </div>
+    <div class="challenge-feedback fb-wrong" data-for="a">You can't SUM text! How would you add 'Mumbai' + 'Delhi'? SUM only works on numbers like salary, price, quantity.</div>
+    <div class="challenge-feedback fb-correct" data-for="b">Correct! COUNT works on any column — it just counts how many rows have a value. It doesn't matter if the column holds text, numbers, or dates.</div>
+    <div class="challenge-feedback fb-wrong" data-for="c">You can't average text! What's the average of 'Mumbai' and 'Delhi'? AVG only works on numbers.</div>
   </div>
 
   <!-- AS / aliasing -->
@@ -230,6 +563,38 @@
     <div class="remember" style="margin-top:10px;">
       The names after <code class="kw">AS</code> (like <code class="col">total_leads</code>) are names <strong>you make up</strong>. You could write <code>AS <span class="col">banana</span></code> and it would work — it would just be a confusing name. Pick names that describe what the number means.
     </div>
+  </div>
+
+  <!-- Challenge: aggregates without GROUP BY -->
+  <div class="challenge" data-answer="a">
+    <div class="challenge-label">Check yourself</div>
+    <div class="challenge-q">Can you use <code>COUNT(*)</code> without GROUP BY?</div>
+    <div class="challenge-options">
+      <button class="challenge-opt" data-choice="a">Yes — it counts all rows in the table</button>
+      <button class="challenge-opt" data-choice="b">No — COUNT always needs GROUP BY</button>
+    </div>
+    <div class="challenge-feedback fb-correct" data-for="a">Correct! <code>SELECT COUNT(*) FROM customers;</code> counts all rows. GROUP BY is only needed when you want separate counts for each group (like count per city).</div>
+    <div class="challenge-feedback fb-wrong" data-for="b">Actually, COUNT works fine alone! <code>SELECT COUNT(*) FROM customers;</code> gives you the total count. You only add GROUP BY when you want to split the count by categories.</div>
+  </div>
+
+  <!-- Challenge: AS naming -->
+  <div class="challenge" data-answer="c">
+    <div class="challenge-label">Check yourself</div>
+    <div class="challenge-q">What does <code>AS</code> do in <code>SELECT COUNT(*) AS total_leads</code>?</div>
+    <div class="challenge-options">
+      <button class="challenge-opt" data-choice="a">It filters the results to only show leads</button>
+      <button class="challenge-opt" data-choice="b">It's a SQL keyword that's always required with COUNT</button>
+      <button class="challenge-opt" data-choice="c">It gives a nickname to the result column — you choose the name</button>
+    </div>
+    <div class="challenge-feedback fb-wrong" data-for="a">AS doesn't filter anything — that's WHERE's job. AS just gives a name to the column in your results.</div>
+    <div class="challenge-feedback fb-wrong" data-for="b">AS is optional! <code>SELECT COUNT(*) FROM leads</code> works fine — the column just won't have a nice name.</div>
+    <div class="challenge-feedback fb-correct" data-for="c">Correct! AS lets you name the result column whatever you want. <code>AS total_leads</code>, <code>AS my_count</code>, even <code>AS banana</code> — it's just a label.</div>
+  </div>
+
+  <div class="playground-cta">
+    <span class="playground-cta-icon">&#9655;</span>
+    <div><strong>Practice this in the Playground</strong><p>3 assignments for Aggregate Functions</p></div>
+    <a href="playground.html?part=3" class="playground-cta-btn">Open Playground</a>
   </div>
 </div>
 
@@ -256,6 +621,8 @@
     </div>
 
     <div class="analogy">A Pivot Table in Excel. You drag "Region" to the Rows area, and "Deal Value" to the Values area with "Sum". GROUP BY is the same — group by region, sum the deal values.</div>
+
+    <div class="tip"><span><strong>GROUP BY doesn't need WHERE.</strong> You can group all rows without filtering first. WHERE is only added when you want to exclude some rows <em>before</em> grouping.</span></div>
   </div>
 
   <div class="card">
@@ -291,6 +658,38 @@
 <span class="kw">GROUP BY</span> <span class="col">department</span>;</div>
     <div style="font-size:12px;color:#8a7740;margin-top:6px;">Different data, same shape. Group by department instead of region. Count employees instead of leads.</div>
   </div>
+
+  <!-- Challenge: GROUP BY without WHERE -->
+  <div class="challenge" data-answer="a">
+    <div class="challenge-label">Check yourself</div>
+    <div class="challenge-q">You want to count employees in each department. Do you need WHERE?</div>
+    <div class="challenge-options">
+      <button class="challenge-opt" data-choice="a">No — <code>SELECT department, COUNT(*) FROM employees GROUP BY department;</code></button>
+      <button class="challenge-opt" data-choice="b">Yes — you need <code>WHERE</code> before <code>GROUP BY</code></button>
+    </div>
+    <div class="challenge-feedback fb-correct" data-for="a">Correct! GROUP BY works without WHERE. You're grouping ALL employees — no filtering needed. WHERE is only for when you want to exclude some rows before grouping.</div>
+    <div class="challenge-feedback fb-wrong" data-for="b">WHERE is optional! You only add it when you want to exclude rows <em>before</em> grouping. If you want all employees grouped, skip WHERE entirely.</div>
+  </div>
+
+  <!-- Challenge: what can go in SELECT with GROUP BY -->
+  <div class="challenge" data-answer="b">
+    <div class="challenge-label">Check yourself</div>
+    <div class="challenge-q">You're grouping by <code>region</code>. Which SELECT is valid?</div>
+    <div class="challenge-options">
+      <button class="challenge-opt" data-choice="a"><code>SELECT region, lead_name, COUNT(*) ... GROUP BY region</code></button>
+      <button class="challenge-opt" data-choice="b"><code>SELECT region, COUNT(*), SUM(deal_value) ... GROUP BY region</code></button>
+      <button class="challenge-opt" data-choice="c"><code>SELECT lead_name, COUNT(*) ... GROUP BY region</code></button>
+    </div>
+    <div class="challenge-feedback fb-wrong" data-for="a"><code>lead_name</code> isn't grouped and isn't inside a function. When you GROUP BY region, each region has multiple lead names — SQL doesn't know which one to show.</div>
+    <div class="challenge-feedback fb-correct" data-for="b">Correct! Everything in SELECT is either the grouped column (<code>region</code>) or inside an aggregate function (<code>COUNT</code>, <code>SUM</code>). That's the rule.</div>
+    <div class="challenge-feedback fb-wrong" data-for="c"><code>lead_name</code> isn't in GROUP BY and isn't inside a function. With GROUP BY, every column in SELECT must be either the grouping column or wrapped in an aggregate like COUNT, SUM, etc.</div>
+  </div>
+
+  <div class="playground-cta">
+    <span class="playground-cta-icon">&#9655;</span>
+    <div><strong>Practice this in the Playground</strong><p>3 assignments for GROUP BY</p></div>
+    <a href="playground.html?part=4" class="playground-cta-btn">Open Playground</a>
+  </div>
 </div>
 
 <hr class="divider">
@@ -318,8 +717,41 @@
     <div class="analogy">Clicking a column header in Excel to sort A→Z or Z→A, then deleting all rows below a certain point. ORDER BY sorts, LIMIT cuts.</div>
   </div>
 
+  <!-- Mix & Match clarification -->
   <div class="card">
-    <div style="font-size:12px;color:var(--text-faint);font-weight:600;text-transform:uppercase;letter-spacing:.04em;margin-bottom:8px;">Example</div>
+    <div style="font-size:14px;font-weight:500;margin-bottom:10px;">Each keyword works on its own</div>
+    <div class="tip"><span><strong>ORDER BY and LIMIT are independent.</strong> You can use one without the other, and neither requires WHERE or GROUP BY. They're separate tools you add only when needed.</span></div>
+
+    <div style="font-size:12px;color:var(--text-faint);font-weight:600;text-transform:uppercase;letter-spacing:.04em;margin:14px 0 8px;">Three different queries, each valid</div>
+
+    <div class="three-col">
+      <div style="background:#f5f3ed;border-radius:var(--radius-sm);padding:10px 12px;">
+        <div style="font-size:10px;font-weight:600;color:var(--text-faint);text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px;">Just LIMIT</div>
+        <div style="font-family:var(--font-mono);font-size:11px;line-height:1.7;white-space:pre"><span class="kw">SELECT</span> *
+<span class="kw">FROM</span>   <span class="col">leads</span>
+<span class="kw">LIMIT</span>  <span class="val">2</span>;</div>
+        <div style="font-size:10px;color:var(--text-faint);margin-top:6px;">Just give me any 2 rows</div>
+      </div>
+      <div style="background:#f5f3ed;border-radius:var(--radius-sm);padding:10px 12px;">
+        <div style="font-size:10px;font-weight:600;color:var(--text-faint);text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px;">Just ORDER BY</div>
+        <div style="font-family:var(--font-mono);font-size:11px;line-height:1.7;white-space:pre"><span class="kw">SELECT</span> *
+<span class="kw">FROM</span>   <span class="col">leads</span>
+<span class="kw">ORDER BY</span> <span class="col">deal_value</span>;</div>
+        <div style="font-size:10px;color:var(--text-faint);margin-top:6px;">Sort all rows, show all of them</div>
+      </div>
+      <div style="background:#f5f3ed;border-radius:var(--radius-sm);padding:10px 12px;">
+        <div style="font-size:10px;font-weight:600;color:var(--text-faint);text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px;">Both together</div>
+        <div style="font-family:var(--font-mono);font-size:11px;line-height:1.7;white-space:pre"><span class="kw">SELECT</span> *
+<span class="kw">FROM</span>   <span class="col">leads</span>
+<span class="kw">ORDER BY</span> <span class="col">deal_value</span> <span class="kw">DESC</span>
+<span class="kw">LIMIT</span>  <span class="val">3</span>;</div>
+        <div style="font-size:10px;color:var(--text-faint);margin-top:6px;">Sort + top 3 = "Top N" list</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div style="font-size:12px;color:var(--text-faint);font-weight:600;text-transform:uppercase;letter-spacing:.04em;margin-bottom:8px;">Full example</div>
     <div class="sql-block"><span class="kw">SELECT</span>   <span class="col">lead_name</span>, <span class="col">deal_value</span>
 <span class="kw">FROM</span>     <span class="col">leads</span>
 <span class="kw">ORDER BY</span> <span class="col">deal_value</span> <span class="kw">DESC</span>
@@ -329,6 +761,40 @@
       <tr><td style="color:var(--text-faint)">2</td><td>Karan Bose</td><td>1,200,000</td></tr>
       <tr><td style="color:var(--text-faint)">3</td><td>Riya Mehta</td><td>800,000</td></tr>
     </tbody></table>
+
+    <div class="tip"><span>Notice: no WHERE here. We didn't filter anything — we just sorted and took the top 3. You add WHERE <strong>only</strong> if you want to exclude rows first.</span></div>
+  </div>
+
+  <!-- Challenge: LIMIT without WHERE -->
+  <div class="challenge" data-answer="a">
+    <div class="challenge-label">Check yourself</div>
+    <div class="challenge-q">Will this query work? <code>SELECT * FROM products LIMIT 5;</code></div>
+    <div class="challenge-options">
+      <button class="challenge-opt" data-choice="a">Yes — it gives you 5 rows from the products table</button>
+      <button class="challenge-opt" data-choice="b">No — LIMIT needs WHERE or ORDER BY first</button>
+    </div>
+    <div class="challenge-feedback fb-correct" data-for="a">Correct! LIMIT works on its own. It just says "give me this many rows" — no WHERE or ORDER BY required.</div>
+    <div class="challenge-feedback fb-wrong" data-for="b">LIMIT is independent! It doesn't need WHERE or ORDER BY. <code>SELECT * FROM products LIMIT 5;</code> is perfectly valid — gives you any 5 rows.</div>
+  </div>
+
+  <!-- Challenge: DESC vs ASC -->
+  <div class="challenge" data-answer="c">
+    <div class="challenge-label">Check yourself</div>
+    <div class="challenge-q">You want the cheapest product first. Which ORDER BY do you use?</div>
+    <div class="challenge-options">
+      <button class="challenge-opt" data-choice="a"><code>ORDER BY price DESC</code></button>
+      <button class="challenge-opt" data-choice="b"><code>ORDER BY price LIMIT 1</code></button>
+      <button class="challenge-opt" data-choice="c"><code>ORDER BY price ASC</code></button>
+    </div>
+    <div class="challenge-feedback fb-wrong" data-for="a">DESC = descending = largest first. You'd get the most <em>expensive</em> product first. For cheapest, use ASC (ascending = smallest first).</div>
+    <div class="challenge-feedback fb-wrong" data-for="b">LIMIT doesn't go inside ORDER BY — it goes on its own line after it. And without ASC/DESC, you'd get the default sort (ASC), which happens to be correct, but you'd still get all rows.</div>
+    <div class="challenge-feedback fb-correct" data-for="c">Correct! ASC = ascending = smallest first. So the cheapest price appears at the top. (ASC is actually the default — <code>ORDER BY price</code> alone does the same thing.)</div>
+  </div>
+
+  <div class="playground-cta">
+    <span class="playground-cta-icon">&#9655;</span>
+    <div><strong>Practice this in the Playground</strong><p>3 assignments for ORDER BY + LIMIT</p></div>
+    <a href="playground.html?part=5" class="playground-cta-btn">Open Playground</a>
   </div>
 </div>
 
@@ -378,6 +844,9 @@
     <div class="note-row"><div class="note-dot"></div><div><span class="tag tag-note">l.column</span> <span class="note-text">The dot means "from this table, get this column". Like saying "from the leads table, get lead_name".</span></div></div>
 
     <div class="analogy">VLOOKUP in Excel. You take campaign_id from the leads sheet, look it up in the campaigns sheet, and bring over the campaign_name and channel columns.</div>
+
+    <div class="tip"><span><strong>The <code>AS</code> nickname is optional.</strong> Writing <code>leads AS l</code> just saves typing. You could write <code>leads.lead_name</code> instead of <code>l.lead_name</code> — same result, just longer.</span></div>
+    <div class="tip"><span><strong>The dot (.) means "from this table".</strong> When two tables have a column with the same name, the dot tells SQL which one you mean: <code>leads.id</code> vs <code>campaigns.id</code>.</span></div>
   </div>
 
   <div class="card">
@@ -406,6 +875,40 @@
 <span class="kw">JOIN</span>    <span class="col">customers</span> <span class="kw">AS</span> <span class="col">c</span>  <span class="kw">ON</span>  <span class="col">o.customer_id</span> = <span class="col">c.id</span>;</div>
     <div style="font-size:12px;color:#8a7740;margin-top:6px;">Orders + Customers instead of Leads + Campaigns. The pattern is the same.</div>
   </div>
+
+  <!-- Challenge: dot notation -->
+  <div class="challenge" data-answer="b">
+    <div class="challenge-label">Check yourself</div>
+    <div class="challenge-q">In the query above, what does <code>c.channel</code> mean?</div>
+    <div class="challenge-options">
+      <button class="challenge-opt" data-choice="a">A special function called <code>c</code> applied to channel</button>
+      <button class="challenge-opt" data-choice="b">The <code>channel</code> column from the table nicknamed <code>c</code> (campaigns)</button>
+      <button class="challenge-opt" data-choice="c">The letter "c" followed by the word "channel"</button>
+    </div>
+    <div class="challenge-feedback fb-wrong" data-for="a">The dot isn't a function. It means "from this table, get this column". Think of it like an address: <code>campaigns.channel</code> = "the channel column that lives in the campaigns table".</div>
+    <div class="challenge-feedback fb-correct" data-for="b">Correct! <code>c</code> is the nickname for <code>campaigns</code> (from <code>AS c</code>). So <code>c.channel</code> = "the channel column from the campaigns table".</div>
+    <div class="challenge-feedback fb-wrong" data-for="c">The dot has a specific meaning — it separates the table nickname from the column name. <code>c.channel</code> means "the channel column from table c (campaigns)".</div>
+  </div>
+
+  <!-- Challenge: ON clause -->
+  <div class="challenge" data-answer="b">
+    <div class="challenge-label">Check yourself</div>
+    <div class="challenge-q">You're joining <code>orders</code> and <code>customers</code>. Orders has <code>customer_id</code>, customers has <code>id</code>. What goes after ON?</div>
+    <div class="challenge-options">
+      <button class="challenge-opt" data-choice="a"><code>ON orders.id = customers.id</code></button>
+      <button class="challenge-opt" data-choice="b"><code>ON orders.customer_id = customers.id</code></button>
+      <button class="challenge-opt" data-choice="c"><code>ON customer_id = id</code></button>
+    </div>
+    <div class="challenge-feedback fb-wrong" data-for="a"><code>orders.id</code> is the order's own ID, not the link to customers. You need the column that <em>references</em> the other table: <code>orders.customer_id</code>.</div>
+    <div class="challenge-feedback fb-correct" data-for="b">Correct! <code>customer_id</code> in orders is the "link" column that points to <code>id</code> in customers. That's what ON connects.</div>
+    <div class="challenge-feedback fb-wrong" data-for="c">When using JOIN, always prefix column names with the table name (or nickname). Without the prefix, SQL might not know which table's <code>id</code> you mean. Use <code>orders.customer_id = customers.id</code>.</div>
+  </div>
+
+  <div class="playground-cta">
+    <span class="playground-cta-icon">&#9655;</span>
+    <div><strong>Practice this in the Playground</strong><p>3 assignments for JOIN</p></div>
+    <a href="playground.html?part=6" class="playground-cta-btn">Open Playground</a>
+  </div>
 </div>
 
 <hr class="divider">
@@ -433,7 +936,7 @@
       <div class="step-arrow">→</div>
       <div class="step-badge">LIMIT</div>
     </div>
-    <div style="font-size:12px;color:var(--text-faint);margin-top:6px;">You don't always use all of them. But when you do, this is the order.</div>
+    <div class="tip"><span><strong>You pick only what you need.</strong> Most queries use just 2–3 of these. This is the <em>order</em> they go in when you do use them — not a checklist you must complete every time.</span></div>
   </div>
 
   <div class="card">
@@ -460,6 +963,40 @@
       <tr><td>Email</td><td>1</td><td>1,200,000</td></tr>
       <tr><td>LinkedIn</td><td>1</td><td>800,000</td></tr>
     </tbody></table>
+  </div>
+
+  <!-- Challenge: keyword order -->
+  <div class="challenge" data-answer="c">
+    <div class="challenge-label">Check yourself</div>
+    <div class="challenge-q">Which is the correct order of keywords?</div>
+    <div class="challenge-options">
+      <button class="challenge-opt" data-choice="a"><code>SELECT → WHERE → FROM → GROUP BY</code></button>
+      <button class="challenge-opt" data-choice="b"><code>FROM → SELECT → ORDER BY → LIMIT</code></button>
+      <button class="challenge-opt" data-choice="c"><code>SELECT → FROM → WHERE → GROUP BY → ORDER BY → LIMIT</code></button>
+    </div>
+    <div class="challenge-feedback fb-wrong" data-for="a">FROM comes right after SELECT, not after WHERE. The order is: SELECT → FROM → WHERE → GROUP BY → ORDER BY → LIMIT.</div>
+    <div class="challenge-feedback fb-wrong" data-for="b">SELECT always comes first in a query, not FROM. Think: "I want to SEE (SELECT) this data FROM this table WHERE..."</div>
+    <div class="challenge-feedback fb-correct" data-for="c">Correct! SELECT → FROM → WHERE → GROUP BY → ORDER BY → LIMIT. But remember: you only use the ones you need. Most queries use just 2–3 of these.</div>
+  </div>
+
+  <!-- Challenge: which keywords are required -->
+  <div class="challenge" data-answer="a">
+    <div class="challenge-label">Check yourself</div>
+    <div class="challenge-q">A manager asks: "Show me average salary by department, highest first." Which keywords do you need?</div>
+    <div class="challenge-options">
+      <button class="challenge-opt" data-choice="a"><code>SELECT</code>, <code>FROM</code>, <code>GROUP BY</code>, <code>ORDER BY</code></button>
+      <button class="challenge-opt" data-choice="b"><code>SELECT</code>, <code>FROM</code>, <code>WHERE</code>, <code>GROUP BY</code>, <code>ORDER BY</code>, <code>LIMIT</code></button>
+      <button class="challenge-opt" data-choice="c"><code>SELECT</code>, <code>FROM</code>, <code>GROUP BY</code></button>
+    </div>
+    <div class="challenge-feedback fb-correct" data-for="a">Correct! No WHERE (no filtering needed), no LIMIT (show all departments). GROUP BY for "by department", ORDER BY DESC for "highest first". You pick only what you need.</div>
+    <div class="challenge-feedback fb-wrong" data-for="b">Too many! WHERE isn't needed (no filtering), and LIMIT isn't needed (show all departments). Don't use keywords just because they exist — only when the question asks for that behaviour.</div>
+    <div class="challenge-feedback fb-wrong" data-for="c">Almost! You'd get the right groups, but the manager wants "highest first" — that's ORDER BY DESC. Without it, the results appear in no particular order.</div>
+  </div>
+
+  <div class="playground-cta">
+    <span class="playground-cta-icon">&#9655;</span>
+    <div><strong>Practice this in the Playground</strong><p>2 advanced assignments — the final boss</p></div>
+    <a href="playground.html?part=7" class="playground-cta-btn">Open Playground</a>
   </div>
 </div>
 

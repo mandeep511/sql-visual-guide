@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SQL Playground — Practice What You Learned</title>
+
+<!-- Fonts (shared with lessons) -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;0,9..144,700;1,9..144,300&family=DM+Sans:ital,wght@0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<!-- CodeMirror -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/addon/hint/show-hint.min.css">
+
+<!-- Styles -->
+<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="playground.css">
+</head>
+<body class="pg-body">
+
+<!-- ═══════════════ NAV BAR ═══════════════ -->
+<nav class="site-nav">
+  <a href="sql_visual_guide.html" class="site-nav-logo">SQL Guide</a>
+  <div class="site-nav-links">
+    <a href="sql_visual_guide.html" class="site-nav-link">Lessons</a>
+    <a href="playground.html" class="site-nav-link active">Playground</a>
+  </div>
+  <div class="site-nav-progress">
+    <svg class="progress-ring" viewBox="0 0 36 36">
+      <circle class="progress-ring-bg" cx="18" cy="18" r="15.5" fill="none" stroke-width="3"/>
+      <circle class="progress-ring-fill" cx="18" cy="18" r="15.5" fill="none" stroke-width="3"
+              stroke-dasharray="97.4" stroke-dashoffset="97.4"/>
+    </svg>
+    <span class="progress-label">0%</span>
+  </div>
+</nav>
+
+<!-- ═══════════════ WELCOME OVERLAY ═══════════════ -->
+<div class="welcome-overlay" id="welcome-overlay">
+  <div class="welcome-card">
+    <div class="welcome-icon">&#9655;</div>
+    <h2>Welcome to the SQL Playground</h2>
+    <p>This is your workspace — think of it like Excel, but instead of clicking, you <strong>type commands</strong>.</p>
+    <div class="welcome-zones">
+      <div class="welcome-zone">
+        <span class="welcome-zone-icon">&#9776;</span>
+        <div><strong>Left panel</strong><br>Your data tables + assignments</div>
+      </div>
+      <div class="welcome-zone">
+        <span class="welcome-zone-icon">&#9998;</span>
+        <div><strong>Center</strong><br>Where you write SQL</div>
+      </div>
+      <div class="welcome-zone">
+        <span class="welcome-zone-icon">&#9638;</span>
+        <div><strong>Below</strong><br>Your results appear here</div>
+      </div>
+    </div>
+    <div class="welcome-legend">
+      <span class="welcome-legend-item"><span class="welcome-dot" style="background:var(--blue)"></span> SQL commands (fixed words)</span>
+      <span class="welcome-legend-item"><span class="welcome-dot" style="background:var(--green)"></span> Table &amp; column names (change per database)</span>
+      <span class="welcome-legend-item"><span class="welcome-dot" style="background:var(--amber)"></span> Values (your data)</span>
+    </div>
+    <button class="welcome-btn" onclick="dismissWelcome()">Got it, let's go</button>
+  </div>
+</div>
+
+<!-- ═══════════════ MAIN LAYOUT ═══════════════ -->
+<div class="pg-layout">
+
+  <!-- ─── SIDEBAR ─── -->
+  <aside class="pg-sidebar" id="pg-sidebar">
+    <button class="sidebar-toggle" id="sidebar-toggle" title="Toggle sidebar">&#9776;</button>
+
+    <!-- Schema Explorer -->
+    <div class="sidebar-section" id="schema-section">
+      <div class="sidebar-heading" onclick="toggleSidebarSection('schema-section')">
+        <span class="sidebar-arrow">&#9656;</span> Schema Explorer
+        <span class="sidebar-badge" id="table-count-badge">0 tables</span>
+      </div>
+      <div class="sidebar-body" id="schema-tree">
+        <div class="schema-loading">Loading database...</div>
+      </div>
+    </div>
+
+    <!-- Assignments -->
+    <div class="sidebar-section open" id="assignments-section">
+      <div class="sidebar-heading" onclick="toggleSidebarSection('assignments-section')">
+        <span class="sidebar-arrow">&#9656;</span> Assignments
+        <span class="sidebar-badge" id="assignment-progress-badge">0 / 20</span>
+      </div>
+      <div class="sidebar-body" id="assignments-panel">
+        <!-- Filled by JS -->
+      </div>
+    </div>
+
+    <!-- Data Upload -->
+    <div class="sidebar-section" id="upload-section">
+      <div class="sidebar-heading" onclick="toggleSidebarSection('upload-section')">
+        <span class="sidebar-arrow">&#9656;</span> Upload Data
+      </div>
+      <div class="sidebar-body">
+        <div class="upload-area">
+          <label class="upload-btn">
+            Upload CSV
+            <input type="file" accept=".csv" id="csv-upload" hidden>
+          </label>
+          <label class="upload-btn">
+            Upload SQLite
+            <input type="file" accept=".sqlite,.db" id="sqlite-upload" hidden>
+          </label>
+          <button class="upload-btn upload-btn-reset" onclick="resetDatabase()">Reset to Default</button>
+        </div>
+        <div class="upload-status" id="upload-status"></div>
+      </div>
+    </div>
+
+    <!-- Database Viewer -->
+    <div class="sidebar-section" id="viewer-section">
+      <div class="sidebar-heading" onclick="toggleSidebarSection('viewer-section')">
+        <span class="sidebar-arrow">&#9656;</span> Browse Tables
+      </div>
+      <div class="sidebar-body">
+        <select id="viewer-table-select" class="viewer-select" onchange="browseTable()">
+          <option value="">Pick a table...</option>
+        </select>
+        <div id="viewer-output" class="viewer-output"></div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ─── MAIN WORKSPACE ─── -->
+  <main class="pg-main">
+    <!-- Mobile tabs -->
+    <div class="pg-mobile-tabs">
+      <button class="pg-tab active" data-tab="editor" onclick="switchTab('editor')">Editor</button>
+      <button class="pg-tab" data-tab="results" onclick="switchTab('results')">Results</button>
+      <button class="pg-tab" data-tab="schema" onclick="switchTab('schema')">Schema</button>
+      <button class="pg-tab" data-tab="tasks" onclick="switchTab('tasks')">Tasks</button>
+    </div>
+
+    <!-- Editor toolbar -->
+    <div class="editor-toolbar">
+      <button class="run-btn" id="run-btn" onclick="runQuery()" title="Run query (Ctrl+Enter)">
+        <span class="run-btn-icon">&#9655;</span> Run Query
+      </button>
+      <button class="toolbar-btn" onclick="clearEditor()" title="Clear editor">Clear</button>
+      <div class="toolbar-spacer"></div>
+      <div class="color-legend">
+        <span class="legend-item"><span class="legend-dot" style="background:var(--blue)"></span>keyword</span>
+        <span class="legend-item"><span class="legend-dot" style="background:var(--green)"></span>name</span>
+        <span class="legend-item"><span class="legend-dot" style="background:var(--amber)"></span>value</span>
+      </div>
+      <span class="toolbar-hint">Ctrl+Enter to run</span>
+    </div>
+
+    <!-- CodeMirror editor -->
+    <div class="editor-wrap" id="editor-wrap">
+      <textarea id="sql-editor">SELECT * FROM customers;</textarea>
+    </div>
+
+    <!-- Active assignment bar -->
+    <div class="active-assignment" id="active-assignment" style="display:none">
+      <div class="active-assignment-info">
+        <span class="active-assignment-badge" id="active-assignment-badge"></span>
+        <span class="active-assignment-title" id="active-assignment-title"></span>
+      </div>
+      <div class="active-assignment-actions">
+        <button class="hint-btn" id="hint-btn" onclick="showNextHint()">Show Hint</button>
+        <button class="toolbar-btn" onclick="clearActiveAssignment()">Exit Assignment</button>
+      </div>
+    </div>
+
+    <!-- Hints area -->
+    <div class="hints-area" id="hints-area" style="display:none"></div>
+
+    <!-- Results area -->
+    <div class="results-wrap" id="results-wrap">
+      <div class="results-placeholder">
+        <div class="results-placeholder-icon">&#9655;</div>
+        <p>Run a query to see results here</p>
+        <p class="results-placeholder-sub">Type SQL above and click <strong>Run Query</strong> or press <strong>Ctrl+Enter</strong></p>
+      </div>
+    </div>
+
+    <!-- Status bar -->
+    <div class="status-bar">
+      <span class="status-message" id="status-message">Ready</span>
+      <span class="status-db">Database: Bright Store</span>
+    </div>
+  </main>
+</div>
+
+<!-- ═══════════════ SCRIPTS ═══════════════ -->
+<!-- sql.js (WebAssembly SQLite) -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.10.3/sql-wasm.js"></script>
+
+<!-- CodeMirror -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/sql/sql.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/addon/hint/show-hint.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/addon/hint/sql-hint.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/addon/edit/matchbrackets.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/addon/edit/closebrackets.min.js"></script>
+
+<!-- Papa Parse for CSV -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+
+<!-- App scripts -->
+<script src="default-database.js"></script>
+<script src="assignments.js"></script>
+<script src="playground.js"></script>
+</body>
+</html>

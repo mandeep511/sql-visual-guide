@@ -306,7 +306,11 @@ body {
 
 /* ——— Two-col grid ——— */
 .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
-@media (max-width: 560px) { .two-col { grid-template-columns: 1fr; } }
+.three-col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
+@media (max-width: 560px) {
+  .two-col { grid-template-columns: 1fr; }
+  .three-col { grid-template-columns: 1fr; }
+}
 
 /* ——— Visual grouping bands ——— */
 .group-visual { display: flex; flex-direction: column; gap: 5px; margin: 12px 0; }
@@ -390,6 +394,35 @@ body {
   font-weight: 500;
 }
 
+/* ——— Tip callout (compact, subtle) ——— */
+.tip {
+  font-size: 12px;
+  color: var(--text-soft);
+  padding: 8px 12px;
+  border-radius: var(--radius-sm);
+  background: #f1efe8;
+  margin: 10px 0;
+  line-height: 1.55;
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
+}
+.tip::before {
+  content: '→';
+  font-weight: 700;
+  color: var(--text-faint);
+  flex-shrink: 0;
+  margin-top: 0px;
+}
+.tip strong { color: var(--text); }
+.tip code {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  background: rgba(255,255,255,.6);
+  padding: 1px 5px;
+  border-radius: 3px;
+}
+
 /* ——— "Remember" callout ——— */
 .remember {
   background: var(--rose-bg);
@@ -459,6 +492,339 @@ body {
 
 /* ——— Inline code ——— */
 code { font-family: var(--font-mono); font-size: 12px; }
+
+/* ——— Shared Navigation Bar ——— */
+.site-nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 48px;
+  background: var(--card);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  padding: 0 20px;
+  z-index: 500;
+  gap: 20px;
+}
+.site-nav-logo {
+  font-family: var(--font-display);
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--text);
+  text-decoration: none;
+  letter-spacing: -.01em;
+}
+.site-nav-links {
+  display: flex;
+  gap: 4px;
+}
+.site-nav-link {
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-faint);
+  text-decoration: none;
+  padding: 6px 14px;
+  border-radius: var(--radius-sm);
+  transition: all 0.15s;
+}
+.site-nav-link:hover {
+  color: var(--text);
+  background: var(--bg);
+}
+.site-nav-link.active {
+  color: var(--blue);
+  background: var(--blue-bg);
+}
+.site-nav-progress {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.progress-ring {
+  width: 28px;
+  height: 28px;
+  transform: rotate(-90deg);
+}
+.progress-ring-bg {
+  stroke: var(--border);
+}
+.progress-ring-fill {
+  stroke: var(--green);
+  stroke-linecap: round;
+  transition: stroke-dashoffset 0.5s ease;
+}
+.progress-label {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--text-faint);
+}
+
+/* Nav bar adds top spacing to lesson page */
+body:not(.pg-body) .container {
+  margin-top: 48px;
+}
+
+/* ——— Playground CTA Card ——— */
+.playground-cta {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 18px;
+  margin: 12px 0 0;
+  background: var(--blue-bg);
+  border: 1px solid var(--blue-border);
+  border-radius: var(--radius-sm);
+}
+.playground-cta-icon {
+  font-size: 20px;
+  color: var(--blue);
+  flex-shrink: 0;
+}
+.playground-cta strong {
+  font-size: 13px;
+  color: var(--blue);
+  display: block;
+}
+.playground-cta p {
+  font-size: 12px;
+  color: var(--text-soft);
+  margin: 0;
+}
+.playground-cta-btn {
+  margin-left: auto;
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 600;
+  padding: 7px 16px;
+  border-radius: var(--radius-sm);
+  background: var(--blue);
+  color: white;
+  text-decoration: none;
+  flex-shrink: 0;
+  transition: background 0.15s;
+}
+.playground-cta-btn:hover {
+  background: #1e5288;
+}
+
+/* ——— Interactive Challenge Component ——— */
+.challenge {
+  background: var(--card);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.1rem 1.25rem;
+  margin: 14px 0;
+  position: relative;
+}
+.challenge-label {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .08em;
+  color: var(--purple);
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.challenge-label::before {
+  content: '?';
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--purple-bg);
+  color: var(--purple);
+  font-size: 10px;
+  font-weight: 700;
+  border: 1px solid var(--purple-border);
+  flex-shrink: 0;
+}
+.challenge-q {
+  font-size: 13.5px;
+  color: var(--text);
+  line-height: 1.55;
+  margin-bottom: 10px;
+  font-weight: 500;
+}
+.challenge-q code {
+  font-size: 12px;
+  background: #f1efe8;
+  padding: 1px 5px;
+  border-radius: 3px;
+}
+.challenge-options {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.challenge-opt {
+  display: block;
+  width: 100%;
+  text-align: left;
+  font-family: var(--font-body);
+  font-size: 13px;
+  padding: 9px 14px;
+  border-radius: var(--radius-sm);
+  border: 1.5px solid var(--border);
+  background: var(--bg);
+  color: var(--text);
+  cursor: pointer;
+  transition: all 0.15s;
+  line-height: 1.5;
+}
+.challenge-opt:hover:not(:disabled) {
+  border-color: var(--purple-border);
+  background: var(--purple-bg);
+}
+.challenge-opt code {
+  font-size: 12px;
+  background: rgba(255,255,255,.5);
+  padding: 1px 5px;
+  border-radius: 3px;
+}
+.challenge-opt:disabled {
+  cursor: default;
+  opacity: 0.55;
+}
+.challenge-opt.correct {
+  border-color: var(--green-border) !important;
+  background: var(--green-bg) !important;
+  color: var(--green) !important;
+  opacity: 1 !important;
+  font-weight: 600;
+}
+.challenge-opt.wrong {
+  border-color: var(--rose-border) !important;
+  background: var(--rose-bg) !important;
+  color: var(--rose) !important;
+  opacity: 1 !important;
+}
+.challenge-feedback {
+  display: none;
+  margin-top: 10px;
+  padding: 9px 12px;
+  border-radius: var(--radius-sm);
+  font-size: 12.5px;
+  line-height: 1.55;
+  animation: fadeIn 0.2s ease;
+}
+.challenge-feedback.visible {
+  display: block;
+}
+.challenge-feedback.fb-correct {
+  background: var(--green-bg);
+  color: #3d5a25;
+  border: 1px solid var(--green-border);
+}
+.challenge-feedback.fb-wrong {
+  background: var(--rose-bg);
+  color: #6b2838;
+  border: 1px solid var(--rose-border);
+}
+.challenge-feedback code {
+  font-size: 11.5px;
+  background: rgba(255,255,255,.5);
+  padding: 1px 4px;
+  border-radius: 3px;
+}
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-4px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ——— Rules box (compact horizontal cards) ——— */
+.rules-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin: 10px 0;
+}
+@media (max-width: 560px) {
+  .rules-grid { grid-template-columns: 1fr; }
+}
+.rule-card {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 10px 14px;
+}
+.rule-card-label {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .06em;
+  margin-bottom: 5px;
+}
+.rule-card-label.rc-green { color: var(--green); }
+.rule-card-label.rc-amber { color: var(--amber); }
+.rule-card-label.rc-blue  { color: var(--blue); }
+.rule-card-label.rc-rose  { color: var(--rose); }
+.rule-card-body {
+  font-size: 12.5px;
+  color: var(--text-soft);
+  line-height: 1.55;
+}
+.rule-card-body code {
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  padding: 1px 5px;
+  border-radius: 3px;
+}
+.rule-card-body .good {
+  background: var(--green-bg);
+  color: var(--green);
+  border: 0.5px solid var(--green-border);
+}
+.rule-card-body .bad {
+  background: var(--rose-bg);
+  color: var(--rose);
+  border: 0.5px solid var(--rose-border);
+  text-decoration: line-through;
+  text-decoration-color: var(--rose);
+}
+.rule-card-body .neutral {
+  background: #f1efe8;
+  color: var(--text);
+}
+
+/* ——— Operator reference table ——— */
+.op-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12.5px;
+  margin: 6px 0;
+}
+.op-table td {
+  padding: 5px 10px;
+  border-bottom: 0.5px solid #eae7e0;
+  vertical-align: middle;
+}
+.op-table tr:last-child td { border-bottom: none; }
+.op-table .op-symbol {
+  font-family: var(--font-mono);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--blue);
+  width: 50px;
+  text-align: center;
+}
+.op-table .op-meaning {
+  color: var(--text);
+  font-weight: 500;
+}
+.op-table .op-example {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text-faint);
+}
 
 /* ——— Subtle noise texture ——— */
 body::before {
