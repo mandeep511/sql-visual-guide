@@ -138,26 +138,32 @@ body {
 }
 
 /* ——— Section ——— */
-.section { margin-bottom: 2.75rem; }
+.section { margin-bottom: 3rem; }
 .sec-number {
-  font-family: var(--font-display);
-  font-size: 13px;
+  font-family: var(--font-mono);
+  font-size: 11px;
   font-weight: 500;
-  color: var(--text-faint);
-  margin-bottom: 2px;
-  letter-spacing: .02em;
+  color: var(--blue);
+  margin-bottom: 4px;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+  background: var(--blue-bg);
+  display: inline-block;
+  padding: 2px 10px;
+  border-radius: 99px;
 }
 .sec-title {
   font-family: var(--font-display);
   font-size: 22px;
   font-weight: 500;
   margin-bottom: 4px;
+  margin-top: 8px;
   letter-spacing: -0.01em;
 }
 .sec-sub {
   font-size: 14px;
   color: var(--text-soft);
-  margin-bottom: 1rem;
+  margin-bottom: 1.25rem;
   max-width: 600px;
 }
 
@@ -339,8 +345,19 @@ body {
 /* ——— Divider ——— */
 .divider {
   border: none;
-  border-top: 1.5px solid var(--border);
-  margin: 2rem 0;
+  height: 1px;
+  margin: 3rem 0;
+  background: transparent;
+  position: relative;
+}
+.divider::before {
+  content: '';
+  position: absolute;
+  left: 20%;
+  right: 20%;
+  top: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--border), transparent);
 }
 
 /* ——— Aggregate function cards ——— */
@@ -575,7 +592,7 @@ body:not(.pg-body) .container {
   align-items: center;
   gap: 14px;
   padding: 14px 18px;
-  margin: 12px 0 0;
+  margin: 2rem 0 0;
   background: var(--blue-bg);
   border: 1px solid var(--blue-border);
   border-radius: var(--radius-sm);
@@ -614,12 +631,17 @@ body:not(.pg-body) .container {
 
 /* ——— Interactive Challenge Component ——— */
 .challenge {
-  background: var(--card);
-  border: 1.5px solid var(--border);
-  border-radius: var(--radius);
-  padding: 1.1rem 1.25rem;
-  margin: 14px 0;
+  background: var(--purple-bg);
+  border: none;
+  border-left: 3px solid var(--purple);
+  border-radius: 0 var(--radius) var(--radius) 0;
+  padding: 1.25rem 1.5rem;
+  margin: 2rem 0;
   position: relative;
+}
+/* Extra spacing when challenges stack back-to-back */
+.challenge + .challenge {
+  margin-top: 1rem;
 }
 .challenge-label {
   font-size: 10px;
@@ -640,11 +662,11 @@ body:not(.pg-body) .container {
   width: 16px;
   height: 16px;
   border-radius: 50%;
-  background: var(--purple-bg);
+  background: var(--card);
   color: var(--purple);
   font-size: 10px;
   font-weight: 700;
-  border: 1px solid var(--purple-border);
+  border: 1.5px solid var(--purple-border);
   flex-shrink: 0;
 }
 .challenge-q {
@@ -673,8 +695,8 @@ body:not(.pg-body) .container {
   font-size: 13px;
   padding: 9px 14px;
   border-radius: var(--radius-sm);
-  border: 1.5px solid var(--border);
-  background: var(--bg);
+  border: 1.5px solid rgba(107,63,160,.12);
+  background: var(--card);
   color: var(--text);
   cursor: pointer;
   transition: all 0.15s;
@@ -682,7 +704,8 @@ body:not(.pg-body) .container {
 }
 .challenge-opt:hover:not(:disabled) {
   border-color: var(--purple-border);
-  background: var(--purple-bg);
+  background: white;
+  box-shadow: 0 1px 4px rgba(107,63,160,.08);
 }
 .challenge-opt code {
   font-size: 12px;
@@ -710,7 +733,7 @@ body:not(.pg-body) .container {
 .challenge-feedback {
   display: none;
   margin-top: 10px;
-  padding: 9px 12px;
+  padding: 10px 14px;
   border-radius: var(--radius-sm);
   font-size: 12.5px;
   line-height: 1.55;

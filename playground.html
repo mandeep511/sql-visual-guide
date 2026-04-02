@@ -83,13 +83,20 @@
       </div>
     </div>
 
+    <!-- Mode switcher -->
+    <div class="sidebar-mode-switcher" id="sidebar-mode-switcher">
+      <button class="mode-btn active" id="mode-freeplay-btn" onclick="enterFreePlay()">
+        <span class="mode-btn-icon">&#9998;</span> Free Play
+      </button>
+      <button class="mode-btn" id="mode-assignments-btn" onclick="enterAssignmentsMode()">
+        <span class="mode-btn-icon">&#9776;</span> Assignments
+        <span class="mode-btn-count" id="mode-assignments-count">0/20</span>
+      </button>
+    </div>
+
     <!-- Assignments -->
-    <div class="sidebar-section open" id="assignments-section">
-      <div class="sidebar-heading" onclick="toggleSidebarSection('assignments-section')">
-        <span class="sidebar-arrow">&#9656;</span> Assignments
-        <span class="sidebar-badge" id="assignment-progress-badge">0 / 20</span>
-      </div>
-      <div class="sidebar-body" id="assignments-panel">
+    <div class="sidebar-assignments" id="assignments-section" style="display:none">
+      <div id="assignments-panel">
         <!-- Filled by JS -->
       </div>
     </div>
@@ -166,8 +173,15 @@
         <span class="active-assignment-title" id="active-assignment-title"></span>
       </div>
       <div class="active-assignment-actions">
+        <button class="question-btn" id="question-btn" onclick="toggleQuestionPopover()" style="display:none">View Question</button>
         <button class="hint-btn" id="hint-btn" onclick="showNextHint()">Show Hint</button>
         <button class="toolbar-btn" onclick="clearActiveAssignment()">Exit Assignment</button>
+      </div>
+      <!-- Question popover (no backdrop) -->
+      <div class="question-popover" id="question-popover">
+        <div class="question-popover-title" id="popover-title"></div>
+        <div class="question-popover-text" id="popover-text"></div>
+        <div class="question-popover-why" id="popover-why"></div>
       </div>
     </div>
 

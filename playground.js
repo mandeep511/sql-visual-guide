@@ -153,6 +153,11 @@ function runQuery() {
       saveQueryToHistory(sql, false, 0);
     }
 
+    // Show "View Question" button if an assignment is active
+    if (activeAssignment) {
+      document.getElementById('question-btn').style.display = '';
+    }
+
     runBtn.classList.remove('running');
     runBtn.innerHTML = '<span class="run-btn-icon">&#9655;</span> Run Query';
   }, 50);
@@ -370,7 +375,7 @@ function renderAssignments() {
   }
 
   panel.innerHTML = html;
-  document.getElementById('assignment-progress-badge').textContent = completedAssignments + ' / ' + totalAssignments;
+  document.getElementById('mode-assignments-count').textContent = completedAssignments + '/' + totalAssignments;
 }
 
 function toggleAssignmentPart(el) {
@@ -394,6 +399,10 @@ function startAssignment(id) {
   activeAssignment = assignment;
   hintIndex = 0;
 
+  // Switch mode buttons to show assignment is active
+  document.getElementById('mode-assignments-btn').classList.add('active');
+  document.getElementById('mode-freeplay-btn').classList.remove('active');
+
   // Update UI
   var bar = document.getElementById('active-assignment');
   bar.style.display = 'flex';
@@ -404,6 +413,16 @@ function startAssignment(id) {
   var hintsArea = document.getElementById('hints-area');
   hintsArea.style.display = 'none';
   hintsArea.innerHTML = '';
+
+  // Hide "View Question" button (shown after first query run)
+  document.getElementById('question-btn').style.display = 'none';
+  // Close popover if open
+  document.getElementById('question-popover').classList.remove('open');
+
+  // Populate the popover for later use
+  document.getElementById('popover-title').textContent = assignment.title;
+  document.getElementById('popover-text').innerHTML = assignment.instructions;
+  document.getElementById('popover-why').innerHTML = assignment.whyItMatters;
 
   // Show instructions in results area
   var resultsWrap = document.getElementById('results-wrap');
@@ -441,12 +460,80 @@ function clearActiveAssignment() {
   activeAssignment = null;
   hintIndex = 0;
   document.getElementById('active-assignment').style.display = 'none';
+  document.getElementById('question-popover').classList.remove('open');
   document.getElementById('hints-area').style.display = 'none';
   document.getElementById('hints-area').innerHTML = '';
   document.querySelectorAll('.assignment-item').forEach(function (el) {
     el.classList.remove('active');
   });
+
+  // Return to free play state
+  enterFreePlay();
 }
+
+// ═══════════ Mode Switching ═══════════
+
+function enterFreePlay() {
+  // Update mode buttons
+  document.getElementById('mode-freeplay-btn').classList.add('active');
+  document.getElementById('mode-assignments-btn').classList.remove('active');
+
+  // Hide assignments panel
+  document.getElementById('assignments-section').style.display = 'none';
+
+  // Clear any active assignment state
+  if (activeAssignment) {
+    activeAssignment = null;
+    hintIndex = 0;
+    document.getElementById('active-assignment').style.display = 'none';
+    document.getElementById('question-popover').classList.remove('open');
+    document.getElementById('hints-area').style.display = 'none';
+    document.getElementById('hints-area').innerHTML = '';
+    document.querySelectorAll('.assignment-item').forEach(function (el) {
+      el.classList.remove('active');
+    });
+  }
+
+  // Reset editor to default and show clean placeholder
+  if (editor) {
+    editor.setValue('SELECT * FROM customers;');
+    editor.focus();
+  }
+  showFreePlayPlaceholder();
+}
+
+function enterAssignmentsMode() {
+  // Update mode buttons
+  document.getElementById('mode-assignments-btn').classList.add('active');
+  document.getElementById('mode-freeplay-btn').classList.remove('active');
+
+  // Show assignments panel
+  document.getElementById('assignments-section').style.display = '';
+}
+
+function showFreePlayPlaceholder() {
+  var resultsWrap = document.getElementById('results-wrap');
+  resultsWrap.innerHTML =
+    '<div class="results-placeholder">' +
+    '<div class="results-placeholder-icon">&#9655;</div>' +
+    '<p>Run a query to see results here</p>' +
+    '<p class="results-placeholder-sub">Type SQL above and click <strong>Run Query</strong> or press <strong>Ctrl+Enter</strong></p>' +
+    '</div>';
+}
+
+function toggleQuestionPopover() {
+  var popover = document.getElementById('question-popover');
+  popover.classList.toggle('open');
+}
+
+// Close popover when clicking outside
+document.addEventListener('click', function (e) {
+  var popover = document.getElementById('question-popover');
+  var btn = document.getElementById('question-btn');
+  if (popover.classList.contains('open') && !popover.contains(e.target) && e.target !== btn) {
+    popover.classList.remove('open');
+  }
+});
 
 function showNextHint() {
   if (!activeAssignment) return;
@@ -846,9 +933,9 @@ function switchTab(tab) {
     // Open the relevant section
     if (tab === 'schema') {
       document.getElementById('schema-section').classList.add('open');
-      document.getElementById('assignments-section').classList.remove('open');
+      document.getElementById('assignments-section').style.display = 'none';
     } else {
-      document.getElementById('assignments-section').classList.add('open');
+      enterAssignmentsMode();
       document.getElementById('schema-section').classList.remove('open');
     }
   }
@@ -876,6 +963,10 @@ function handleUrlParams() {
   var part = params.get('part');
   if (part) {
     var partNum = parseInt(part);
+
+    // Switch to assignments mode
+    enterAssignmentsMode();
+
     // Open that part's assignments
     document.querySelectorAll('.assignment-part').forEach(function (el) {
       if (parseInt(el.dataset.part) === partNum) {
@@ -888,8 +979,6 @@ function handleUrlParams() {
     if (window.innerWidth <= 1024) {
       document.getElementById('pg-sidebar').classList.add('open');
     }
-    // Open assignments section
-    document.getElementById('assignments-section').classList.add('open');
   }
 }
 
