@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SQL Visual Guide — From Zero</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;0,9..144,700;1,9..144,300&family=DM+Sans:ital,wght@0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div id="progress-bar"></div>
+<div class="container">
+
+<!-- ═══════════════ HEADER ═══════════════ -->
+<div class="hero">
+  <h1>SQL — A Visual Guide</h1>
+  <p>Everything here is explained step by step. No shortcuts, no assumptions. Read top to bottom.</p>
+</div>
+
+<!-- ═══════════════ GOLDEN RULE ═══════════════ -->
+<div class="golden-rule">
+  <div class="golden-rule-title">The most important thing to know before you start</div>
+  <p>
+    In every example below, you'll see names like <code style="color:var(--green)">lead_name</code>, <code style="color:var(--green)">deal_value</code>, <code style="color:var(--green)">leads</code>, etc.<br><br>
+    <strong>These are NOT fixed words.</strong> They are names that someone made up when they created the database. Your database will have <em>completely different names</em> — like <code style="color:var(--green)">customer_name</code>, <code style="color:var(--green)">order_total</code>, or <code style="color:var(--green)">products</code>.<br><br>
+    The only words that are fixed are the <strong style="color:var(--blue)">blue words</strong> — those are SQL commands (<code class="kw">SELECT</code>, <code class="kw">FROM</code>, <code class="kw">WHERE</code>, etc.). Everything else changes depending on your data.
+  </p>
+</div>
+
+<!-- ═══════════════ 1. SELECT + FROM ═══════════════ -->
+<div class="section" data-part="1">
+  <div class="sec-number">Part 1</div>
+  <div class="sec-title">SELECT + FROM</div>
+  <div class="sec-sub">Every SQL query starts with these two. Always. No exceptions.</div>
+
+  <div class="card">
+    <div class="pattern-label">The pattern (this is the shape — memorise this)</div>
+    <div class="pattern-block"><span class="kw">SELECT</span>  <span class="placeholder">column_names_you_want</span>
+<span class="kw">FROM</span>    <span class="placeholder">table_name</span>;</div>
+
+    <div class="notes-title">What each word does</div>
+    <div class="note-row"><div class="note-dot"></div><div><span class="tag tag-kw">SELECT</span> <span class="note-text">Tells SQL which columns to show you. Columns = the vertical headings in your data (like columns in Excel).</span></div></div>
+    <div class="note-row"><div class="note-dot"></div><div><span class="tag tag-kw">FROM</span> <span class="note-text">Tells SQL which table to look in. A table = one sheet of data (like one tab in Excel).</span></div></div>
+    <div class="note-row"><div class="note-dot"></div><div><span class="tag tag-note">*</span> <span class="note-text">Star means "all columns". So <code>SELECT *</code> means "show me everything".</span></div></div>
+    <div class="note-row"><div class="note-dot"></div><div><span class="tag tag-note">;</span> <span class="note-text">Semicolon = full stop. It tells SQL "I'm done writing my query".</span></div></div>
+
+    <div class="analogy">You have an Excel sheet. You want to see only some columns. You'd hide the rest. SELECT does exactly that — it picks which columns to display.</div>
+  </div>
+
+  <div class="card">
+    <div style="font-size:12px;color:var(--text-faint);font-weight:600;text-transform:uppercase;letter-spacing:.04em;margin-bottom:8px;">Example with sample data</div>
+    <div class="sql-block"><span class="kw">SELECT</span> <span class="col">lead_name</span>, <span class="col">region</span>, <span class="col">deal_value</span>
+<span class="kw">FROM</span>   <span class="col">leads</span>;</div>
+    <div style="margin-top:10px;">
+      <div class="tbl-title">What SQL returns</div>
+      <table class="tbl"><thead><tr><th>lead_name</th><th>region</th><th>deal_value</th></tr></thead><tbody>
+        <tr><td>Riya Mehta</td><td>West</td><td>800,000</td></tr>
+        <tr><td>Arjun Nair</td><td>North</td><td>1,500,000</td></tr>
+        <tr><td>Priya Shah</td><td>South</td><td>650,000</td></tr>
+        <tr><td>Karan Bose</td><td>West</td><td>1,200,000</td></tr>
+      </tbody></table>
+    </div>
+  </div>
+
+  <div class="swap-box">
+    <div class="swap-box-label">Same idea, different names</div>
+    <div class="swap-block"><span class="kw">SELECT</span> <span class="col">product_name</span>, <span class="col">price</span>
+<span class="kw">FROM</span>   <span class="col">products</span>;</div>
+    <div style="font-size:12px;color:#8a7740;margin-top:6px;">See? Different table, different columns. The <em>pattern</em> is the same. Only the <span style="color:var(--green)">green names</span> changed.</div>
+  </div>
+</div>
+
+<hr class="divider">
+
+<!-- ═══════════════ 2. WHERE ═══════════════ -->
+<div class="section" data-part="2">
+  <div class="sec-number">Part 2</div>
+  <div class="sec-title">WHERE</div>
+  <div class="sec-sub">Filters your data. Only keeps rows that match a condition you set.</div>
+
+  <div class="card">
+    <div class="pattern-label">The pattern</div>
+    <div class="pattern-block"><span class="kw">SELECT</span>  <span class="placeholder">columns</span>
+<span class="kw">FROM</span>    <span class="placeholder">table</span>
+<span class="kw">WHERE</span>   <span class="placeholder">column</span> <span class="placeholder">operator</span> <span class="placeholder">value</span>;</div>
+
+    <div class="notes-title">What each word does</div>
+    <div class="note-row"><div class="note-dot"></div><div><span class="tag tag-kw">WHERE</span> <span class="note-text">Starts the filter. Only rows that pass this test will show up.</span></div></div>
+    <div class="note-row"><div class="note-dot"></div><div><span class="tag tag-kw">AND</span> <span class="note-text">Add more conditions. ALL of them must be true.</span></div></div>
+    <div class="note-row"><div class="note-dot"></div><div><span class="tag tag-kw">OR</span> <span class="note-text">ANY one condition being true is enough.</span></div></div>
+    <div class="note-row"><div class="note-dot"></div><div><span class="tag tag-note">= &gt; &lt; &gt;= &lt;= !=</span> <span class="note-text">Comparison operators. <code>=</code> means "equals", <code>!=</code> means "not equal to", <code>&gt;</code> means "greater than".</span></div></div>
+    <div class="note-row"><div class="note-dot"></div><div><span class="tag tag-note">'text'</span> <span class="note-text">Text values must be wrapped in single quotes. Numbers don't need quotes.</span></div></div>
+
+    <div class="analogy">Excel's Filter button. Click a column, pick a value, and only matching rows stay visible. WHERE does the same thing — but you type the filter instead of clicking it.</div>
+  </div>
+
+  <div class="card">
+    <div style="font-size:12px;color:var(--text-faint);font-weight:600;text-transform:uppercase;letter-spacing:.04em;margin-bottom:8px;">Example</div>
+    <div class="sql-block"><span class="kw">SELECT</span> <span class="col">lead_name</span>, <span class="col">deal_value</span>
+<span class="kw">FROM</span>   <span class="col">leads</span>
+<span class="kw">WHERE</span>  <span class="col">region</span> = <span class="val">'West'</span>
+  <span class="kw">AND</span>  <span class="col">deal_value</span> &gt; <span class="val">500000</span>;</div>
+
+    <div style="margin-top:10px;">
+      <div class="tbl-title">How SQL processes each row</div>
+      <table class="tbl"><thead><tr><th>lead_name</th><th>region</th><th>deal_value</th><th>Result</th></tr></thead><tbody>
+        <tr><td>Riya Mehta</td><td>West</td><td>800,000</td><td><span class="kept">kept</span></td></tr>
+        <tr class="faded"><td>Arjun Nair</td><td>North</td><td>1,500,000</td><td><span class="dropped">dropped</span> <span class="faded-note">— North ≠ West</span></td></tr>
+        <tr class="faded"><td>Priya Shah</td><td>South</td><td>650,000</td><td><span class="dropped">dropped</span> <span class="faded-note">— South ≠ West</span></td></tr>
+        <tr><td>Karan Bose</td><td>West</td><td>1,200,000</td><td><span class="kept">kept</span></td></tr>
+      </tbody></table>
+    </div>
+  </div>
+
+  <div class="swap-box">
+    <div class="swap-box-label">Same idea, different names</div>
+    <div class="swap-block"><span class="kw">SELECT</span> <span class="col">student_name</span>, <span class="col">marks</span>
+<span class="kw">FROM</span>   <span class="col">exam_results</span>
+<span class="kw">WHERE</span>  <span class="col">marks</span> &gt;= <span class="val">90</span>;</div>
+    <div style="font-size:12px;color:#8a7740;margin-top:6px;">Completely different table and columns. The pattern is identical — <code class="kw">SELECT</code> → <code class="kw">FROM</code> → <code class="kw">WHERE</code>.</div>
+  </div>
+</div>
+
+<hr class="divider">
+
+<!-- ═══════════════ 3. AGGREGATE FUNCTIONS ═══════════════ -->
+<div class="section" data-part="3">
+  <div class="sec-number">Part 3</div>
+  <div class="sec-title">Aggregate Functions</div>
+  <div class="sec-sub">These are built-in calculators. They take many rows and return one number — a count, a total, an average, etc.</div>
+
+  <div class="card">
+    <div class="remember">
+      Aggregate functions are <strong>SQL keywords</strong> (blue words). They are always spelled exactly the same: <code class="kw">COUNT</code>, <code class="kw">SUM</code>, <code class="kw">AVG</code>, <code class="kw">MIN</code>, <code class="kw">MAX</code>.<br>
+      But the column name you put <em>inside the brackets</em> — that depends on YOUR data.
+    </div>
+
+    <div class="pattern-label">The pattern</div>
+    <div class="pattern-block"><span class="kw">SELECT</span>  <span class="kw">FUNCTION_NAME</span>(<span class="placeholder">column_name</span>)
+<span class="kw">FROM</span>    <span class="placeholder">table_name</span>;</div>
+    <div style="font-size:12px;color:var(--text-soft);margin:6px 0 4px;">You replace <span class="placeholder" style="font-size:12px">column_name</span> with whatever column you want to calculate on.</div>
+  </div>
+
+  <!-- Individual function cards -->
+  <div style="margin-top:6px;font-size:14px;font-weight:500;color:var(--text);margin-bottom:10px;">Let's look at each one using this sample data:</div>
+
+  <div class="card" style="padding:1rem;">
+    <div class="tbl-title">leads table (4 rows)</div>
+    <table class="tbl"><thead><tr><th>lead_name</th><th>region</th><th>deal_value</th></tr></thead><tbody>
+      <tr><td>Riya Mehta</td><td>West</td><td>800,000</td></tr>
+      <tr><td>Arjun Nair</td><td>North</td><td>1,500,000</td></tr>
+      <tr><td>Priya Shah</td><td>South</td><td>650,000</td></tr>
+      <tr><td>Karan Bose</td><td>West</td><td>1,200,000</td></tr>
+    </tbody></table>
+  </div>
+
+  <div class="fn-grid">
+    <!-- COUNT -->
+    <div class="fn-card">
+      <div class="fn-card-name">COUNT( )</div>
+      <div class="fn-card-desc">Counts how many rows there are.</div>
+      <div class="fn-card-example"><span class="kw">SELECT</span> <span class="kw">COUNT</span>(*)
+<span class="kw">FROM</span>   <span class="col">leads</span>;</div>
+      <div class="fn-card-result">Returns → <strong>4</strong></div>
+      <div style="font-size:11px;color:var(--text-faint);margin-top:4px;"><code>COUNT(*)</code> counts all rows. <code>COUNT(column)</code> skips empty cells.</div>
+    </div>
+
+    <!-- SUM -->
+    <div class="fn-card">
+      <div class="fn-card-name">SUM( )</div>
+      <div class="fn-card-desc">Adds up all the values in a column.</div>
+      <div class="fn-card-example"><span class="kw">SELECT</span> <span class="kw">SUM</span>(<span class="col">deal_value</span>)
+<span class="kw">FROM</span>   <span class="col">leads</span>;</div>
+      <div class="fn-card-result">Returns → <strong>4,150,000</strong></div>
+      <div style="font-size:11px;color:var(--text-faint);margin-top:4px;">800k + 1500k + 650k + 1200k = 4,150,000</div>
+    </div>
+
+    <!-- AVG -->
+    <div class="fn-card">
+      <div class="fn-card-name">AVG( )</div>
+      <div class="fn-card-desc">Calculates the average (mean).</div>
+      <div class="fn-card-example"><span class="kw">SELECT</span> <span class="kw">AVG</span>(<span class="col">deal_value</span>)
+<span class="kw">FROM</span>   <span class="col">leads</span>;</div>
+      <div class="fn-card-result">Returns → <strong>1,037,500</strong></div>
+      <div style="font-size:11px;color:var(--text-faint);margin-top:4px;">4,150,000 ÷ 4 rows = 1,037,500</div>
+    </div>
+
+    <!-- MIN -->
+    <div class="fn-card">
+      <div class="fn-card-name">MIN( )</div>
+      <div class="fn-card-desc">Finds the smallest value.</div>
+      <div class="fn-card-example"><span class="kw">SELECT</span> <span class="kw">MIN</span>(<span class="col">deal_value</span>)
+<span class="kw">FROM</span>   <span class="col">leads</span>;</div>
+      <div class="fn-card-result">Returns → <strong>650,000</strong></div>
+      <div style="font-size:11px;color:var(--text-faint);margin-top:4px;">The smallest deal_value in the table.</div>
+    </div>
+
+    <!-- MAX -->
+    <div class="fn-card" style="grid-column: 1 / -1;">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;align-items:start;">
+        <div>
+          <div class="fn-card-name">MAX( )</div>
+          <div class="fn-card-desc">Finds the largest value.</div>
+          <div class="fn-card-example"><span class="kw">SELECT</span> <span class="kw">MAX</span>(<span class="col">deal_value</span>)
+<span class="kw">FROM</span>   <span class="col">leads</span>;</div>
+          <div class="fn-card-result">Returns → <strong>1,500,000</strong></div>
+        </div>
+        <div class="swap-box" style="margin:0;">
+          <div class="swap-box-label">Same functions, different data</div>
+          <div class="swap-block"><span class="kw">SELECT</span> <span class="kw">MAX</span>(<span class="col">salary</span>)
+<span class="kw">FROM</span>   <span class="col">employees</span>;</div>
+          <div style="font-size:12px;color:#8a7740;margin-top:6px;">Same <code class="kw">MAX</code>. Different column, different table.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- AS / aliasing -->
+  <div class="card" style="margin-top:12px;">
+    <div style="font-size:14px;font-weight:500;margin-bottom:8px;">Naming your result with <span class="tag tag-kw">AS</span></div>
+    <p style="font-size:13px;color:var(--text-soft);margin-bottom:10px;line-height:1.6;">When you use an aggregate function, SQL doesn't know what to call the result column. <code class="kw">AS</code> lets you give it a name — any name you want.</p>
+    <div class="sql-block"><span class="kw">SELECT</span> <span class="kw">COUNT</span>(*) <span class="kw">AS</span> <span class="col">total_leads</span>,
+       <span class="kw">SUM</span>(<span class="col">deal_value</span>) <span class="kw">AS</span> <span class="col">total_revenue</span>,
+       <span class="kw">AVG</span>(<span class="col">deal_value</span>) <span class="kw">AS</span> <span class="col">average_deal</span>
+<span class="kw">FROM</span>   <span class="col">leads</span>;</div>
+    <table class="tbl" style="margin-top:8px;"><thead><tr><th>total_leads</th><th>total_revenue</th><th>average_deal</th></tr></thead><tbody>
+      <tr><td>4</td><td>4,150,000</td><td>1,037,500</td></tr>
+    </tbody></table>
+    <div class="remember" style="margin-top:10px;">
+      The names after <code class="kw">AS</code> (like <code class="col">total_leads</code>) are names <strong>you make up</strong>. You could write <code>AS <span class="col">banana</span></code> and it would work — it would just be a confusing name. Pick names that describe what the number means.
+    </div>
+  </div>
+</div>
+
+<hr class="divider">
+
+<!-- ═══════════════ 4. GROUP BY ═══════════════ -->
+<div class="section" data-part="4">
+  <div class="sec-number">Part 4</div>
+  <div class="sec-title">GROUP BY</div>
+  <div class="sec-sub">Takes your rows, puts them in groups based on a column, then runs aggregate functions on each group separately.</div>
+
+  <div class="card">
+    <div class="pattern-label">The pattern</div>
+    <div class="pattern-block"><span class="kw">SELECT</span>   <span class="placeholder">grouping_column</span>,
+         <span class="kw">FUNCTION</span>(<span class="placeholder">column</span>) <span class="kw">AS</span> <span class="placeholder">name</span>
+<span class="kw">FROM</span>     <span class="placeholder">table</span>
+<span class="kw">GROUP BY</span> <span class="placeholder">grouping_column</span>;</div>
+
+    <div class="notes-title">What each word does</div>
+    <div class="note-row"><div class="note-dot"></div><div><span class="tag tag-kw">GROUP BY</span> <span class="note-text">Tells SQL: "put all rows with the same value in this column into one group". Then each function runs once per group.</span></div></div>
+
+    <div class="remember">
+      If you use GROUP BY, every column in SELECT must either be (a) the column you're grouping by, or (b) inside an aggregate function. You can't just list a random column — SQL wouldn't know which row's value to show.
+    </div>
+
+    <div class="analogy">A Pivot Table in Excel. You drag "Region" to the Rows area, and "Deal Value" to the Values area with "Sum". GROUP BY is the same — group by region, sum the deal values.</div>
+  </div>
+
+  <div class="card">
+    <div style="font-size:12px;color:var(--text-faint);font-weight:600;text-transform:uppercase;letter-spacing:.04em;margin-bottom:8px;">Example</div>
+    <div class="sql-block"><span class="kw">SELECT</span>   <span class="col">region</span>,
+         <span class="kw">COUNT</span>(*) <span class="kw">AS</span> <span class="col">total_leads</span>,
+         <span class="kw">SUM</span>(<span class="col">deal_value</span>) <span class="kw">AS</span> <span class="col">revenue</span>,
+         <span class="kw">AVG</span>(<span class="col">deal_value</span>) <span class="kw">AS</span> <span class="col">avg_deal</span>
+<span class="kw">FROM</span>     <span class="col">leads</span>
+<span class="kw">GROUP BY</span> <span class="col">region</span>;</div>
+
+    <div style="margin-top:14px;font-size:13px;font-weight:500;color:var(--text);margin-bottom:6px;">Step 1 — SQL groups the rows by region</div>
+    <div class="group-visual">
+      <div class="group-band band-blue"><span>West</span> <span style="font-size:11px;opacity:.7">Riya (800k) + Karan (1,200k)</span></div>
+      <div class="group-band band-green"><span>North</span> <span style="font-size:11px;opacity:.7">Arjun (1,500k)</span></div>
+      <div class="group-band band-amber"><span>South</span> <span style="font-size:11px;opacity:.7">Priya (650k)</span></div>
+    </div>
+    <div class="arrow-down">↓</div>
+    <div style="font-size:13px;font-weight:500;color:var(--text);margin:4px 0 8px;">Step 2 — Each group collapses into one summary row</div>
+    <table class="tbl"><thead><tr><th>region</th><th>total_leads</th><th>revenue</th><th>avg_deal</th></tr></thead><tbody>
+      <tr class="highlight-row-blue"><td>West</td><td>2</td><td>2,000,000</td><td>1,000,000</td></tr>
+      <tr class="highlight-row-green"><td>North</td><td>1</td><td>1,500,000</td><td>1,500,000</td></tr>
+      <tr class="highlight-row-amber"><td>South</td><td>1</td><td>650,000</td><td>650,000</td></tr>
+    </tbody></table>
+  </div>
+
+  <div class="swap-box">
+    <div class="swap-box-label">Same idea, different names</div>
+    <div class="swap-block"><span class="kw">SELECT</span>   <span class="col">department</span>,
+         <span class="kw">COUNT</span>(*) <span class="kw">AS</span> <span class="col">headcount</span>,
+         <span class="kw">AVG</span>(<span class="col">salary</span>) <span class="kw">AS</span> <span class="col">avg_salary</span>
+<span class="kw">FROM</span>     <span class="col">employees</span>
+<span class="kw">GROUP BY</span> <span class="col">department</span>;</div>
+    <div style="font-size:12px;color:#8a7740;margin-top:6px;">Different data, same shape. Group by department instead of region. Count employees instead of leads.</div>
+  </div>
+</div>
+
+<hr class="divider">
+
+<!-- ═══════════════ 5. ORDER BY + LIMIT ═══════════════ -->
+<div class="section" data-part="5">
+  <div class="sec-number">Part 5</div>
+  <div class="sec-title">ORDER BY + LIMIT</div>
+  <div class="sec-sub">Sort your results and control how many rows to show.</div>
+
+  <div class="card">
+    <div class="pattern-label">The pattern</div>
+    <div class="pattern-block"><span class="kw">SELECT</span>   <span class="placeholder">columns</span>
+<span class="kw">FROM</span>     <span class="placeholder">table</span>
+<span class="kw">ORDER BY</span> <span class="placeholder">column</span> <span class="kw">DESC</span>
+<span class="kw">LIMIT</span>    <span class="placeholder">number</span>;</div>
+
+    <div class="notes-title">What each word does</div>
+    <div class="note-row"><div class="note-dot"></div><div><span class="tag tag-kw">ORDER BY</span> <span class="note-text">Sorts the result. Must come near the end of your query (after WHERE and GROUP BY).</span></div></div>
+    <div class="note-row"><div class="note-dot"></div><div><span class="tag tag-kw">DESC</span> <span class="note-text">Largest first (descending). Think: <strong>D</strong>own.</span></div></div>
+    <div class="note-row"><div class="note-dot"></div><div><span class="tag tag-kw">ASC</span> <span class="note-text">Smallest first (ascending). Think: <strong>A</strong>rrow up. This is the default — if you don't write anything, SQL assumes ASC.</span></div></div>
+    <div class="note-row"><div class="note-dot"></div><div><span class="tag tag-kw">LIMIT</span> <span class="note-text">Only return this many rows. "Give me the top 3" = <code>LIMIT 3</code>.</span></div></div>
+    <div class="note-row"><div class="note-dot"></div><div><span class="tag tag-note">-- text</span> <span class="note-text">Two dashes start a comment. SQL ignores everything after <code>--</code> on that line. It's just a note to yourself.</span></div></div>
+
+    <div class="analogy">Clicking a column header in Excel to sort A→Z or Z→A, then deleting all rows below a certain point. ORDER BY sorts, LIMIT cuts.</div>
+  </div>
+
+  <div class="card">
+    <div style="font-size:12px;color:var(--text-faint);font-weight:600;text-transform:uppercase;letter-spacing:.04em;margin-bottom:8px;">Example</div>
+    <div class="sql-block"><span class="kw">SELECT</span>   <span class="col">lead_name</span>, <span class="col">deal_value</span>
+<span class="kw">FROM</span>     <span class="col">leads</span>
+<span class="kw">ORDER BY</span> <span class="col">deal_value</span> <span class="kw">DESC</span>
+<span class="kw">LIMIT</span>    <span class="val">3</span>;  <span class="cmt">-- top 3 deals only</span></div>
+    <table class="tbl" style="margin-top:10px"><thead><tr><th>#</th><th>lead_name</th><th>deal_value</th></tr></thead><tbody>
+      <tr><td style="color:var(--text-faint)">1</td><td>Arjun Nair</td><td>1,500,000</td></tr>
+      <tr><td style="color:var(--text-faint)">2</td><td>Karan Bose</td><td>1,200,000</td></tr>
+      <tr><td style="color:var(--text-faint)">3</td><td>Riya Mehta</td><td>800,000</td></tr>
+    </tbody></table>
+  </div>
+</div>
+
+<hr class="divider">
+
+<!-- ═══════════════ 6. JOIN ═══════════════ -->
+<div class="section" data-part="6">
+  <div class="sec-number">Part 6</div>
+  <div class="sec-title">JOIN — Combining two tables</div>
+  <div class="sec-sub">When your data lives in two separate tables, JOIN connects them using a column they share.</div>
+
+  <div class="card">
+    <p style="font-size:13px;color:var(--text-soft);margin-bottom:14px;line-height:1.6;">Imagine you have two Excel sheets. One has lead info, the other has campaign info. They're connected by a shared ID — like a code that appears in both sheets.</p>
+    <div class="two-col" style="margin-bottom:14px;">
+      <div>
+        <div class="tbl-title">leads table</div>
+        <table class="tbl"><thead><tr><th>id</th><th>lead_name</th><th>campaign_id</th><th>deal_value</th></tr></thead><tbody>
+          <tr><td>1</td><td>Riya Mehta</td><td class="id-link">C1</td><td>800,000</td></tr>
+          <tr><td>2</td><td>Arjun Nair</td><td class="id-link">C2</td><td>1,500,000</td></tr>
+          <tr><td>3</td><td>Priya Shah</td><td class="id-link">C1</td><td>650,000</td></tr>
+          <tr><td>4</td><td>Karan Bose</td><td class="id-link">C3</td><td>1,200,000</td></tr>
+        </tbody></table>
+      </div>
+      <div>
+        <div class="tbl-title">campaigns table</div>
+        <table class="tbl"><thead><tr><th>id</th><th>campaign_name</th><th>channel</th></tr></thead><tbody>
+          <tr><td class="id-link">C1</td><td>Q1 LinkedIn</td><td>LinkedIn</td></tr>
+          <tr><td class="id-link">C2</td><td>Google Ads Spring</td><td>Google</td></tr>
+          <tr><td class="id-link">C3</td><td>Email Nurture</td><td>Email</td></tr>
+        </tbody></table>
+      </div>
+    </div>
+    <div class="remember">The <span class="id-link">blue IDs</span> are the link between the two tables. <code class="col">campaign_id</code> in leads matches <code class="col">id</code> in campaigns. This is how SQL knows which rows belong together.</div>
+  </div>
+
+  <div class="card">
+    <div class="pattern-label">The pattern</div>
+    <div class="pattern-block"><span class="kw">SELECT</span>  <span class="placeholder">columns_from_either_table</span>
+<span class="kw">FROM</span>    <span class="placeholder">first_table</span>  <span class="kw">AS</span> <span class="placeholder">shortname1</span>
+<span class="kw">JOIN</span>    <span class="placeholder">second_table</span> <span class="kw">AS</span> <span class="placeholder">shortname2</span>
+        <span class="kw">ON</span> <span class="placeholder">shortname1.shared_column</span> = <span class="placeholder">shortname2.shared_column</span>;</div>
+
+    <div class="notes-title">What each word does</div>
+    <div class="note-row"><div class="note-dot"></div><div><span class="tag tag-kw">JOIN</span> <span class="note-text">Connects two tables. Short for INNER JOIN — only includes rows where a match exists in both tables.</span></div></div>
+    <div class="note-row"><div class="note-dot"></div><div><span class="tag tag-kw">ON</span> <span class="note-text">Tells SQL which columns to match. "Connect rows where this column equals that column."</span></div></div>
+    <div class="note-row"><div class="note-dot"></div><div><span class="tag tag-kw">AS l / AS c</span> <span class="note-text">Short nicknames for the tables. So you can write <code>l.lead_name</code> instead of typing the full table name every time.</span></div></div>
+    <div class="note-row"><div class="note-dot"></div><div><span class="tag tag-note">l.column</span> <span class="note-text">The dot means "from this table, get this column". Like saying "from the leads table, get lead_name".</span></div></div>
+
+    <div class="analogy">VLOOKUP in Excel. You take campaign_id from the leads sheet, look it up in the campaigns sheet, and bring over the campaign_name and channel columns.</div>
+  </div>
+
+  <div class="card">
+    <div style="font-size:12px;color:var(--text-faint);font-weight:600;text-transform:uppercase;letter-spacing:.04em;margin-bottom:8px;">Example</div>
+    <div class="sql-block"><span class="kw">SELECT</span>  <span class="col">l.lead_name</span>,
+        <span class="col">c.campaign_name</span>,
+        <span class="col">c.channel</span>,
+        <span class="col">l.deal_value</span>
+<span class="kw">FROM</span>    <span class="col">leads</span>     <span class="kw">AS</span> <span class="col">l</span>
+<span class="kw">JOIN</span>    <span class="col">campaigns</span> <span class="kw">AS</span> <span class="col">c</span>  <span class="kw">ON</span>  <span class="col">l.campaign_id</span> = <span class="col">c.id</span>;</div>
+    <div style="margin-top:10px;">
+      <div class="tbl-title">Result — both tables merged into one</div>
+      <table class="tbl"><thead><tr><th>lead_name</th><th>campaign_name</th><th>channel</th><th>deal_value</th></tr></thead><tbody>
+        <tr><td>Riya Mehta</td><td>Q1 LinkedIn</td><td>LinkedIn</td><td>800,000</td></tr>
+        <tr><td>Arjun Nair</td><td>Google Ads Spring</td><td>Google</td><td>1,500,000</td></tr>
+        <tr><td>Priya Shah</td><td>Q1 LinkedIn</td><td>LinkedIn</td><td>650,000</td></tr>
+        <tr><td>Karan Bose</td><td>Email Nurture</td><td>Email</td><td>1,200,000</td></tr>
+      </tbody></table>
+    </div>
+  </div>
+
+  <div class="swap-box">
+    <div class="swap-box-label">Same idea, different names</div>
+    <div class="swap-block"><span class="kw">SELECT</span>  <span class="col">o.order_id</span>, <span class="col">c.customer_name</span>, <span class="col">o.amount</span>
+<span class="kw">FROM</span>    <span class="col">orders</span>    <span class="kw">AS</span> <span class="col">o</span>
+<span class="kw">JOIN</span>    <span class="col">customers</span> <span class="kw">AS</span> <span class="col">c</span>  <span class="kw">ON</span>  <span class="col">o.customer_id</span> = <span class="col">c.id</span>;</div>
+    <div style="font-size:12px;color:#8a7740;margin-top:6px;">Orders + Customers instead of Leads + Campaigns. The pattern is the same.</div>
+  </div>
+</div>
+
+<hr class="divider">
+
+<!-- ═══════════════ 7. PUTTING IT ALL TOGETHER ═══════════════ -->
+<div class="section" data-part="7">
+  <div class="sec-number">Part 7</div>
+  <div class="sec-title">Putting it all together</div>
+  <div class="sec-sub">A real-world query that uses JOIN + WHERE + GROUP BY + aggregate functions + ORDER BY — all at once.</div>
+
+  <div class="card">
+    <div style="font-size:13px;color:var(--text-soft);margin-bottom:10px;line-height:1.6;">Before we write the query, here's the order that SQL keywords must appear in:</div>
+    <div class="step-flow">
+      <div class="step-badge">SELECT</div>
+      <div class="step-arrow">→</div>
+      <div class="step-badge">FROM</div>
+      <div class="step-arrow">→</div>
+      <div class="step-badge">JOIN ... ON</div>
+      <div class="step-arrow">→</div>
+      <div class="step-badge">WHERE</div>
+      <div class="step-arrow">→</div>
+      <div class="step-badge">GROUP BY</div>
+      <div class="step-arrow">→</div>
+      <div class="step-badge">ORDER BY</div>
+      <div class="step-arrow">→</div>
+      <div class="step-badge">LIMIT</div>
+    </div>
+    <div style="font-size:12px;color:var(--text-faint);margin-top:6px;">You don't always use all of them. But when you do, this is the order.</div>
+  </div>
+
+  <div class="card">
+    <div style="font-size:13px;font-weight:500;color:var(--text);margin-bottom:10px;">The question we want to answer:</div>
+    <div style="font-size:15px;font-family:var(--font-display);font-weight:500;color:var(--blue);margin-bottom:14px;line-height:1.5;">"For deals over 7 lakhs, show me total leads and revenue by marketing channel — highest revenue first."</div>
+    <div class="sql-block"><span class="kw">SELECT</span>   <span class="col">c.channel</span>,
+         <span class="kw">COUNT</span>(*) <span class="kw">AS</span> <span class="col">leads</span>,
+         <span class="kw">SUM</span>(<span class="col">l.deal_value</span>) <span class="kw">AS</span> <span class="col">total_revenue</span>
+<span class="kw">FROM</span>     <span class="col">leads</span> <span class="kw">AS</span> <span class="col">l</span>
+<span class="kw">JOIN</span>     <span class="col">campaigns</span> <span class="kw">AS</span> <span class="col">c</span> <span class="kw">ON</span> <span class="col">l.campaign_id</span> = <span class="col">c.id</span>
+<span class="kw">WHERE</span>    <span class="col">l.deal_value</span> &gt; <span class="val">700000</span>
+<span class="kw">GROUP BY</span> <span class="col">c.channel</span>
+<span class="kw">ORDER BY</span> <span class="col">total_revenue</span> <span class="kw">DESC</span>;</div>
+
+    <div class="notes-title">Reading it line by line</div>
+    <div class="note-row"><div class="note-dot" style="background:var(--blue)"></div><div><span class="note-text"><strong>SELECT</strong> — I want to see the channel, a count of leads, and the sum of deal values.</span></div></div>
+    <div class="note-row"><div class="note-dot" style="background:var(--blue)"></div><div><span class="note-text"><strong>FROM + JOIN</strong> — Get data from the leads table, connected to the campaigns table.</span></div></div>
+    <div class="note-row"><div class="note-dot" style="background:var(--blue)"></div><div><span class="note-text"><strong>WHERE</strong> — But only keep deals worth more than 700,000.</span></div></div>
+    <div class="note-row"><div class="note-dot" style="background:var(--blue)"></div><div><span class="note-text"><strong>GROUP BY</strong> — Group the remaining rows by channel.</span></div></div>
+    <div class="note-row"><div class="note-dot" style="background:var(--blue)"></div><div><span class="note-text"><strong>ORDER BY DESC</strong> — Sort so the highest revenue channel is on top.</span></div></div>
+
+    <table class="tbl" style="margin-top:12px"><thead><tr><th>channel</th><th>leads</th><th>total_revenue</th></tr></thead><tbody>
+      <tr><td>Google</td><td>1</td><td>1,500,000</td></tr>
+      <tr><td>Email</td><td>1</td><td>1,200,000</td></tr>
+      <tr><td>LinkedIn</td><td>1</td><td>800,000</td></tr>
+    </tbody></table>
+  </div>
+</div>
+
+<hr class="divider">
+
+<!-- ═══════════════ CHEAT SHEET ═══════════════ -->
+<div class="section" data-part="8">
+  <div class="sec-title" style="font-size:18px;">Quick Reference</div>
+  <div class="sec-sub">The five aggregate functions at a glance.</div>
+  <div class="card" style="padding:1rem 1.25rem;">
+    <table class="tbl">
+      <thead><tr><th>Function</th><th>What it does</th><th>Example</th></tr></thead>
+      <tbody>
+        <tr><td><code class="kw" style="font-size:13px;">COUNT(*)</code></td><td>Counts how many rows</td><td style="color:var(--text-faint)">How many leads do we have?</td></tr>
+        <tr><td><code class="kw" style="font-size:13px;">SUM(col)</code></td><td>Adds up all values</td><td style="color:var(--text-faint)">What's the total revenue?</td></tr>
+        <tr><td><code class="kw" style="font-size:13px;">AVG(col)</code></td><td>Average (mean) value</td><td style="color:var(--text-faint)">What's the average deal size?</td></tr>
+        <tr><td><code class="kw" style="font-size:13px;">MIN(col)</code></td><td>Smallest value</td><td style="color:var(--text-faint)">What's the lowest salary?</td></tr>
+        <tr><td><code class="kw" style="font-size:13px;">MAX(col)</code></td><td>Largest value</td><td style="color:var(--text-faint)">What's the highest score?</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="golden-rule" style="margin-top:1.25rem;">
+    <div class="golden-rule-title">One last reminder</div>
+    <p>
+      <strong style="color:var(--blue)">Blue words</strong> = SQL commands. Always the same. Memorise these.<br>
+      <strong style="color:var(--green)">Green words</strong> = table and column names. These come from YOUR data. They will be different every time.<br>
+      <strong style="color:var(--amber)">Amber words</strong> = values you're searching for. These are whatever you need them to be.<br>
+      <strong style="color:var(--rose)">Pink words</strong> = placeholders in patterns. Replace these with real names from your database.
+    </p>
+  </div>
+</div>
+
+</div>
+<script src="script.js"></script>
+</body>
+</html>
