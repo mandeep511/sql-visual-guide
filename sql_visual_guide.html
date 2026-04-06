@@ -606,6 +606,35 @@
   <div class="sec-title">GROUP BY</div>
   <div class="sec-sub">Takes your rows, puts them in groups based on a column, then runs aggregate functions on each group separately.</div>
 
+  <!-- Why this exists -->
+  <div class="card">
+    <p style="font-size:13.5px;color:var(--text);line-height:1.65;margin-bottom:12px;">
+      In Part 3, you learned <code>COUNT(*)</code> gives you <strong>one number for the whole table</strong>. But what if your boss asks: <em>"How many leads do we have <strong>in each region</strong>?"</em>
+    </p>
+    <p style="font-size:13.5px;color:var(--text);line-height:1.65;margin-bottom:12px;">
+      That's GROUP BY. It splits your data into piles — one pile per region, or department, or category — and then counts (or sums, or averages) <strong>each pile separately</strong>.
+    </p>
+
+    <div class="compare-cols">
+      <div class="compare-good">
+        <div class="compare-label">Without GROUP BY</div>
+        <p style="margin:4px 0 6px;color:var(--text-soft);font-size:12px;">One answer for everybody</p>
+        <code>SELECT COUNT(*) FROM leads;
+→ 4</code>
+      </div>
+      <div class="compare-good">
+        <div class="compare-label">With GROUP BY</div>
+        <p style="margin:4px 0 6px;color:var(--text-soft);font-size:12px;">One answer per group</p>
+        <code>SELECT region, COUNT(*)
+FROM leads GROUP BY region;
+→ West: 2, North: 1, South: 1</code>
+      </div>
+    </div>
+
+    <div class="analogy">A Pivot Table in Excel. You drag "Region" to the Rows area, and "Deal Value" to the Values area with "Sum". GROUP BY is the same — group by region, sum the deal values.</div>
+  </div>
+
+  <!-- The pattern -->
   <div class="card">
     <div class="pattern-label">The pattern</div>
     <div class="pattern-block"><span class="kw">SELECT</span>   <span class="placeholder">grouping_column</span>,
@@ -615,18 +644,15 @@
 
     <div class="notes-title">What each word does</div>
     <div class="note-row"><div class="note-dot"></div><div><span class="tag tag-kw">GROUP BY</span> <span class="note-text">Tells SQL: "put all rows with the same value in this column into one group". Then each function runs once per group.</span></div></div>
-
-    <div class="remember">
-      If you use GROUP BY, every column in SELECT must either be (a) the column you're grouping by, or (b) inside an aggregate function. You can't just list a random column — SQL wouldn't know which row's value to show.
-    </div>
-
-    <div class="analogy">A Pivot Table in Excel. You drag "Region" to the Rows area, and "Deal Value" to the Values area with "Sum". GROUP BY is the same — group by region, sum the deal values.</div>
+    <div class="note-row"><div class="note-dot"></div><div><span class="tag tag-kw">AS name</span> <span class="note-text">Gives your calculated column a label. Without it, the column header would just say <code>COUNT(*)</code> instead of something readable.</span></div></div>
 
     <div class="tip"><span><strong>GROUP BY doesn't need WHERE.</strong> You can group all rows without filtering first. WHERE is only added when you want to exclude some rows <em>before</em> grouping.</span></div>
+    <div class="tip"><span><strong>GROUP BY doesn't change your original data.</strong> Your table stays exactly the same. GROUP BY only changes the <em>results</em> you see — like applying a filter in Excel doesn't delete your rows.</span></div>
   </div>
 
+  <!-- Step-by-step visual example -->
   <div class="card">
-    <div style="font-size:12px;color:var(--text-faint);font-weight:600;text-transform:uppercase;letter-spacing:.04em;margin-bottom:8px;">Example</div>
+    <div style="font-size:12px;color:var(--text-faint);font-weight:600;text-transform:uppercase;letter-spacing:.04em;margin-bottom:8px;">Example — watch it happen step by step</div>
     <div class="sql-block"><span class="kw">SELECT</span>   <span class="col">region</span>,
          <span class="kw">COUNT</span>(*) <span class="kw">AS</span> <span class="col">total_leads</span>,
          <span class="kw">SUM</span>(<span class="col">deal_value</span>) <span class="kw">AS</span> <span class="col">revenue</span>,
@@ -634,14 +660,26 @@
 <span class="kw">FROM</span>     <span class="col">leads</span>
 <span class="kw">GROUP BY</span> <span class="col">region</span>;</div>
 
-    <div style="margin-top:14px;font-size:13px;font-weight:500;color:var(--text);margin-bottom:6px;">Step 1 — SQL groups the rows by region</div>
+    <div style="margin-top:16px;font-size:13px;font-weight:600;color:var(--text);margin-bottom:6px;">Step 1 — Here's your raw data (all 4 rows)</div>
+    <table class="tbl"><thead><tr><th>lead_name</th><th>region</th><th>deal_value</th></tr></thead><tbody>
+      <tr><td>Riya Mehta</td><td>West</td><td>800,000</td></tr>
+      <tr><td>Arjun Nair</td><td>North</td><td>1,500,000</td></tr>
+      <tr><td>Priya Shah</td><td>South</td><td>650,000</td></tr>
+      <tr><td>Karan Bose</td><td>West</td><td>1,200,000</td></tr>
+    </tbody></table>
+
+    <div class="arrow-down">↓</div>
+    <div style="font-size:13px;font-weight:600;color:var(--text);margin:4px 0 6px;">Step 2 — SQL sorts them into piles by region</div>
+    <p style="font-size:12px;color:var(--text-soft);margin-bottom:8px;">Notice: Riya and Karan are both "West", so they end up in the same pile.</p>
     <div class="group-visual">
       <div class="group-band band-blue"><span>West</span> <span style="font-size:11px;opacity:.7">Riya (800k) + Karan (1,200k)</span></div>
       <div class="group-band band-green"><span>North</span> <span style="font-size:11px;opacity:.7">Arjun (1,500k)</span></div>
       <div class="group-band band-amber"><span>South</span> <span style="font-size:11px;opacity:.7">Priya (650k)</span></div>
     </div>
+
     <div class="arrow-down">↓</div>
-    <div style="font-size:13px;font-weight:500;color:var(--text);margin:4px 0 8px;">Step 2 — Each group collapses into one summary row</div>
+    <div style="font-size:13px;font-weight:600;color:var(--text);margin:4px 0 6px;">Step 3 — Each pile becomes one summary row</div>
+    <p style="font-size:12px;color:var(--text-soft);margin-bottom:8px;">The individual names are gone. Each group is now just one row with numbers.</p>
     <table class="tbl"><thead><tr><th>region</th><th>total_leads</th><th>revenue</th><th>avg_deal</th></tr></thead><tbody>
       <tr class="highlight-row-blue"><td>West</td><td>2</td><td>2,000,000</td><td>1,000,000</td></tr>
       <tr class="highlight-row-green"><td>North</td><td>1</td><td>1,500,000</td><td>1,500,000</td></tr>
@@ -649,6 +687,68 @@
     </tbody></table>
   </div>
 
+  <!-- The #1 rule — why you can't just add any column -->
+  <div class="card">
+    <div style="font-size:12px;color:var(--rose);font-weight:700;text-transform:uppercase;letter-spacing:.04em;margin-bottom:10px;">The #1 rule beginners trip on</div>
+    <p style="font-size:13px;color:var(--text);line-height:1.6;margin-bottom:10px;">
+      When you use GROUP BY, <strong>each group collapses into one row</strong>. So every column in your SELECT must either be:
+    </p>
+    <div class="rules-grid">
+      <div class="rule-card">
+        <div class="rule-card-label rc-green">Allowed</div>
+        <div class="rule-card-body">The column you're grouping by — because each group only has <em>one</em> value for it (e.g., "West")</div>
+      </div>
+      <div class="rule-card">
+        <div class="rule-card-label rc-green">Allowed</div>
+        <div class="rule-card-body">Inside a function like COUNT, SUM, AVG — because the function <em>calculates</em> a single answer from multiple rows</div>
+      </div>
+    </div>
+
+    <p style="font-size:13px;color:var(--text);line-height:1.6;margin:12px 0 8px;">
+      <strong>But what about a regular column like <code>lead_name</code>?</strong> Watch what happens:
+    </p>
+    <div class="which-one-visual">
+      <div class="wov-label">The "West" group has these lead names:</div>
+      <div class="which-one-row">
+        <span class="which-one-item">Riya Mehta</span>
+        <span class="which-one-item">Karan Bose</span>
+      </div>
+      <div class="which-one-question">The group becomes one row — but which name should SQL show? Riya? Karan? It can't pick, so it gives up and shows an error.</div>
+    </div>
+
+    <div class="compare-cols">
+      <div class="compare-bad">
+        <div class="compare-label">This breaks</div>
+        <code>SELECT region, lead_name, COUNT(*)
+FROM leads GROUP BY region;</code>
+        <p style="margin-top:6px;font-size:11.5px;color:var(--rose);">lead_name isn't grouped and isn't in a function. SQL doesn't know which name to pick.</p>
+      </div>
+      <div class="compare-good">
+        <div class="compare-label">This works</div>
+        <code>SELECT region, COUNT(*), SUM(deal_value)
+FROM leads GROUP BY region;</code>
+        <p style="margin-top:6px;font-size:11.5px;color:var(--green);">Everything is either the group column or inside a function.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Common misconceptions -->
+  <div class="beginner-thought">
+    <div class="thought-wrong">"I need to add WHERE before GROUP BY, otherwise it won't work"</div>
+    <div class="thought-right">WHERE and GROUP BY are completely independent. WHERE filters <em>before</em> grouping (like removing rows from your spreadsheet before making a pivot table). You only add WHERE when you want to exclude certain rows. Most GROUP BY queries don't have WHERE at all.</div>
+  </div>
+
+  <div class="beginner-thought">
+    <div class="thought-wrong">"GROUP BY changes my original table"</div>
+    <div class="thought-right">GROUP BY only affects what your <em>results</em> look like. Your table still has every single row. Think of it like putting sticky notes on your rows — "you're West, you're North" — counting each pile, and giving you a summary. The original rows are untouched.</div>
+  </div>
+
+  <div class="beginner-thought">
+    <div class="thought-wrong">"I can only group by one column"</div>
+    <div class="thought-right">You can group by multiple columns! <code>GROUP BY region, status</code> creates a group for each unique combination: "West + Won", "West + Lost", "North + Won", etc. It's like a pivot table with two row fields.</div>
+  </div>
+
+  <!-- Same idea, different data -->
   <div class="swap-box">
     <div class="swap-box-label">Same idea, different names</div>
     <div class="swap-block"><span class="kw">SELECT</span>   <span class="col">department</span>,
@@ -659,7 +759,12 @@
     <div style="font-size:12px;color:#8a7740;margin-top:6px;">Different data, same shape. Group by department instead of region. Count employees instead of leads.</div>
   </div>
 
-  <!-- Challenge: GROUP BY without WHERE -->
+  <!-- At work scenario -->
+  <div class="at-work">
+    Your manager asks: <em>"How many orders did we get from each city last month?"</em> That's GROUP BY. You group by <code>city</code>, count the orders, and maybe add a WHERE to limit it to last month. In a BA role, <strong>nearly every report you build</strong> will use GROUP BY — "sales by region", "users by plan type", "tickets by priority". It's the most common pattern in business reporting.
+  </div>
+
+  <!-- Challenges with enhanced feedback -->
   <div class="challenge" data-answer="a">
     <div class="challenge-label">Check yourself</div>
     <div class="challenge-q">You want to count employees in each department. Do you need WHERE?</div>
@@ -667,11 +772,10 @@
       <button class="challenge-opt" data-choice="a">No — <code>SELECT department, COUNT(*) FROM employees GROUP BY department;</code></button>
       <button class="challenge-opt" data-choice="b">Yes — you need <code>WHERE</code> before <code>GROUP BY</code></button>
     </div>
-    <div class="challenge-feedback fb-correct" data-for="a">Correct! GROUP BY works without WHERE. You're grouping ALL employees — no filtering needed. WHERE is only for when you want to exclude some rows before grouping.</div>
-    <div class="challenge-feedback fb-wrong" data-for="b">WHERE is optional! You only add it when you want to exclude rows <em>before</em> grouping. If you want all employees grouped, skip WHERE entirely.</div>
+    <div class="challenge-feedback fb-correct" data-for="a">Exactly right! You're counting <em>all</em> employees — there's nothing to filter out. WHERE is only for "I want to exclude some rows first" (like <code>WHERE hire_date > '2024-01-01'</code>). Since you want everyone, skip WHERE entirely. Many beginners add WHERE because they think it's always required — it's not. GROUP BY is happy to work alone.</div>
+    <div class="challenge-feedback fb-wrong" data-for="b">This is a very common mistake! It feels like WHERE should always be there because you learned it first. But WHERE means "filter some rows out first". Here, you want <em>all</em> employees counted — no filtering. Think: "Am I trying to exclude some rows? No? Then I don't need WHERE." The correct query is just: <code>SELECT department, COUNT(*) FROM employees GROUP BY department;</code></div>
   </div>
 
-  <!-- Challenge: what can go in SELECT with GROUP BY -->
   <div class="challenge" data-answer="b">
     <div class="challenge-label">Check yourself</div>
     <div class="challenge-q">You're grouping by <code>region</code>. Which SELECT is valid?</div>
@@ -680,9 +784,27 @@
       <button class="challenge-opt" data-choice="b"><code>SELECT region, COUNT(*), SUM(deal_value) ... GROUP BY region</code></button>
       <button class="challenge-opt" data-choice="c"><code>SELECT lead_name, COUNT(*) ... GROUP BY region</code></button>
     </div>
-    <div class="challenge-feedback fb-wrong" data-for="a"><code>lead_name</code> isn't grouped and isn't inside a function. When you GROUP BY region, each region has multiple lead names — SQL doesn't know which one to show.</div>
-    <div class="challenge-feedback fb-correct" data-for="b">Correct! Everything in SELECT is either the grouped column (<code>region</code>) or inside an aggregate function (<code>COUNT</code>, <code>SUM</code>). That's the rule.</div>
-    <div class="challenge-feedback fb-wrong" data-for="c"><code>lead_name</code> isn't in GROUP BY and isn't inside a function. With GROUP BY, every column in SELECT must be either the grouping column or wrapped in an aggregate like COUNT, SUM, etc.</div>
+    <div class="challenge-feedback fb-wrong" data-for="a">This is the most common GROUP BY mistake. You're thinking: "I want to see the names too!" — totally natural. But here's the problem: the West region has <em>two</em> people (Riya and Karan). The group becomes one row. SQL can't show both names in one row, and it refuses to pick one randomly. The fix: either remove <code>lead_name</code>, or don't use GROUP BY (use a regular SELECT with WHERE instead to see individual rows).</div>
+    <div class="challenge-feedback fb-correct" data-for="b">Correct! Let's check the rule: <code>region</code> — that's the grouping column, allowed. <code>COUNT(*)</code> — aggregate function, allowed. <code>SUM(deal_value)</code> — aggregate function, allowed. Everything either IS the group or is INSIDE a function. If you chose this confidently, you've got it. The other options fail because <code>lead_name</code> is neither — it's a raw column with multiple possible values per group.</div>
+    <div class="challenge-feedback fb-wrong" data-for="c">Two problems here. First, <code>lead_name</code> isn't in GROUP BY and isn't inside a function — SQL doesn't know which name to pick (West has Riya AND Karan). Second, you're grouping by <code>region</code> but not showing it in SELECT — that's technically allowed, but confusing because you'd see counts without knowing which region they belong to. The valid version is: <code>SELECT region, COUNT(*), SUM(deal_value) ... GROUP BY region;</code></div>
+  </div>
+
+  <!-- New challenge: GROUP BY with WHERE -->
+  <div class="challenge" data-answer="b">
+    <div class="challenge-label">Check yourself</div>
+    <div class="challenge-q">Your boss wants: "How many <strong>won</strong> deals per region?" Which query?</div>
+    <div class="challenge-options">
+      <button class="challenge-opt" data-choice="a"><code>SELECT region, COUNT(*) FROM leads GROUP BY region, status = 'won';</code></button>
+      <button class="challenge-opt" data-choice="b"><code>SELECT region, COUNT(*) FROM leads WHERE status = 'won' GROUP BY region;</code></button>
+      <button class="challenge-opt" data-choice="c"><code>SELECT region, COUNT(*) FROM leads GROUP BY region WHERE status = 'won';</code></button>
+    </div>
+    <div class="challenge-feedback fb-wrong" data-for="a">You tried to put the filter inside GROUP BY — understandable, since you're thinking "group by region where it's won". But GROUP BY only takes column names. The filtering (won deals only) has to happen in a separate WHERE clause, <em>before</em> the GROUP BY. Think of it as two steps: first remove the rows you don't want (WHERE), then group what's left (GROUP BY).</div>
+    <div class="challenge-feedback fb-correct" data-for="b">Exactly! Here's the mental order: <strong>first</strong> WHERE removes all non-won deals (like deleting rows from your spreadsheet). <strong>Then</strong> GROUP BY takes what's left and groups by region. It's two separate steps: filter, then group. WHERE always comes before GROUP BY — both in the query and in how SQL actually processes it.</div>
+    <div class="challenge-feedback fb-wrong" data-for="c">So close! You have the right pieces (WHERE and GROUP BY), but the <em>order</em> is wrong. SQL requires WHERE to come <em>before</em> GROUP BY. This isn't just syntax — it reflects what actually happens: SQL first filters rows (WHERE), then groups the survivors (GROUP BY). Flip them: <code>... WHERE status = 'won' GROUP BY region;</code></div>
+  </div>
+
+  <div class="remember">
+    <strong>The order SQL expects:</strong> SELECT → FROM → WHERE → GROUP BY. You can skip WHERE if you don't need it, but when you use both, WHERE always comes first. Think: "filter first, then group."
   </div>
 
   <div class="playground-cta">
@@ -806,8 +928,16 @@
   <div class="sec-title">JOIN — Combining two tables</div>
   <div class="sec-sub">When your data lives in two separate tables, JOIN connects them using a column they share.</div>
 
+  <!-- Why tables are separate -->
   <div class="card">
-    <p style="font-size:13px;color:var(--text-soft);margin-bottom:14px;line-height:1.6;">Imagine you have two Excel sheets. One has lead info, the other has campaign info. They're connected by a shared ID — like a code that appears in both sheets.</p>
+    <div style="font-size:12px;color:var(--blue);font-weight:700;text-transform:uppercase;letter-spacing:.04em;margin-bottom:10px;">First — why is data in separate tables?</div>
+    <p style="font-size:13px;color:var(--text);line-height:1.65;margin-bottom:10px;">
+      Imagine you had ONE giant spreadsheet with leads AND campaign info. Every time Riya's row appears, you'd also have to write "Q1 LinkedIn", "LinkedIn" — and if that campaign name changes, you'd have to update it in every single row.
+    </p>
+    <p style="font-size:13px;color:var(--text);line-height:1.65;margin-bottom:12px;">
+      So databases split things into separate tables: leads in one, campaigns in another. Each has its own job. They're connected by a <strong>shared ID</strong> — a number or code that appears in both tables, like a reference number.
+    </p>
+
     <div class="two-col" style="margin-bottom:14px;">
       <div>
         <div class="tbl-title">leads table</div>
@@ -827,45 +957,150 @@
         </tbody></table>
       </div>
     </div>
-    <div class="remember">The <span class="id-link">blue IDs</span> are the link between the two tables. <code class="col">campaign_id</code> in leads matches <code class="col">id</code> in campaigns. This is how SQL knows which rows belong together.</div>
+    <div class="remember">The <span class="id-link">blue IDs</span> are the link between the two tables. <code class="col">campaign_id</code> in leads matches <code class="col">id</code> in campaigns. This is how SQL knows which rows belong together. Think of it like a reference number on a receipt — it connects the receipt to the order.</div>
   </div>
 
+  <!-- How to find the link column -->
+  <div class="card">
+    <div style="font-size:12px;color:var(--amber);font-weight:700;text-transform:uppercase;letter-spacing:.04em;margin-bottom:10px;">How to spot the link column</div>
+    <p style="font-size:13px;color:var(--text);line-height:1.65;margin-bottom:10px;">
+      When you look at a table, the link column usually follows a pattern: <strong>othertable_id</strong>. For example:
+    </p>
+    <div class="rules-grid">
+      <div class="rule-card">
+        <div class="rule-card-label rc-blue">In the leads table</div>
+        <div class="rule-card-body"><code class="neutral">campaign_id</code> — "campaign" tells you it points to the campaigns table. "id" tells you it's a reference number.</div>
+      </div>
+      <div class="rule-card">
+        <div class="rule-card-label rc-blue">In the orders table</div>
+        <div class="rule-card-body"><code class="neutral">customer_id</code> — "customer" tells you it points to the customers table. Same pattern.</div>
+      </div>
+    </div>
+    <div class="tip"><span><strong>The naming pattern:</strong> If a column is called <code>something_id</code>, it almost always links to the <code>id</code> column in the <code>something</code> table. <code>customer_id</code> → <code>customers.id</code>. <code>product_id</code> → <code>products.id</code>. Learn this pattern and JOIN becomes much easier.</span></div>
+  </div>
+
+  <!-- The pattern -->
   <div class="card">
     <div class="pattern-label">The pattern</div>
     <div class="pattern-block"><span class="kw">SELECT</span>  <span class="placeholder">columns_from_either_table</span>
 <span class="kw">FROM</span>    <span class="placeholder">first_table</span>  <span class="kw">AS</span> <span class="placeholder">shortname1</span>
 <span class="kw">JOIN</span>    <span class="placeholder">second_table</span> <span class="kw">AS</span> <span class="placeholder">shortname2</span>
-        <span class="kw">ON</span> <span class="placeholder">shortname1.shared_column</span> = <span class="placeholder">shortname2.shared_column</span>;</div>
+        <span class="kw">ON</span> <span class="placeholder">shortname1.link_column</span> = <span class="placeholder">shortname2.id</span>;</div>
 
     <div class="notes-title">What each word does</div>
-    <div class="note-row"><div class="note-dot"></div><div><span class="tag tag-kw">JOIN</span> <span class="note-text">Connects two tables. Short for INNER JOIN — only includes rows where a match exists in both tables.</span></div></div>
-    <div class="note-row"><div class="note-dot"></div><div><span class="tag tag-kw">ON</span> <span class="note-text">Tells SQL which columns to match. "Connect rows where this column equals that column."</span></div></div>
-    <div class="note-row"><div class="note-dot"></div><div><span class="tag tag-kw">AS l / AS c</span> <span class="note-text">Short nicknames for the tables. So you can write <code>l.lead_name</code> instead of typing the full table name every time.</span></div></div>
-    <div class="note-row"><div class="note-dot"></div><div><span class="tag tag-note">l.column</span> <span class="note-text">The dot means "from this table, get this column". Like saying "from the leads table, get lead_name".</span></div></div>
+    <div class="note-row"><div class="note-dot"></div><div><span class="tag tag-kw">FROM</span> <span class="note-text">Your starting table — the one with the main data you care about.</span></div></div>
+    <div class="note-row"><div class="note-dot"></div><div><span class="tag tag-kw">JOIN</span> <span class="note-text">The second table you want to bring in. "Also get data from this table."</span></div></div>
+    <div class="note-row"><div class="note-dot"></div><div><span class="tag tag-kw">ON</span> <span class="note-text">The matching rule. "Connect rows where this column equals that column." This is where you put the link.</span></div></div>
+    <div class="note-row"><div class="note-dot"></div><div><span class="tag tag-kw">AS l / AS c</span> <span class="note-text">Short nicknames so you don't type the full table name every time. <code>l</code> = leads, <code>c</code> = campaigns.</span></div></div>
+    <div class="note-row"><div class="note-dot"></div><div><span class="tag tag-note">l.column</span> <span class="note-text">The dot means "from this table". <code>l.lead_name</code> = "the lead_name column from the leads table".</span></div></div>
 
-    <div class="analogy">VLOOKUP in Excel. You take campaign_id from the leads sheet, look it up in the campaigns sheet, and bring over the campaign_name and channel columns.</div>
-
-    <div class="tip"><span><strong>The <code>AS</code> nickname is optional.</strong> Writing <code>leads AS l</code> just saves typing. You could write <code>leads.lead_name</code> instead of <code>l.lead_name</code> — same result, just longer.</span></div>
-    <div class="tip"><span><strong>The dot (.) means "from this table".</strong> When two tables have a column with the same name, the dot tells SQL which one you mean: <code>leads.id</code> vs <code>campaigns.id</code>.</span></div>
+    <div class="analogy">VLOOKUP in Excel. You take campaign_id from the leads sheet, look it up in the campaigns sheet, and bring over the campaign_name and channel columns. JOIN does this automatically for every row.</div>
   </div>
 
+  <!-- Step-by-step matching visual -->
   <div class="card">
-    <div style="font-size:12px;color:var(--text-faint);font-weight:600;text-transform:uppercase;letter-spacing:.04em;margin-bottom:8px;">Example</div>
+    <div style="font-size:12px;color:var(--text-faint);font-weight:600;text-transform:uppercase;letter-spacing:.04em;margin-bottom:8px;">Example — watch SQL match the rows</div>
     <div class="sql-block"><span class="kw">SELECT</span>  <span class="col">l.lead_name</span>,
         <span class="col">c.campaign_name</span>,
         <span class="col">c.channel</span>,
         <span class="col">l.deal_value</span>
 <span class="kw">FROM</span>    <span class="col">leads</span>     <span class="kw">AS</span> <span class="col">l</span>
 <span class="kw">JOIN</span>    <span class="col">campaigns</span> <span class="kw">AS</span> <span class="col">c</span>  <span class="kw">ON</span>  <span class="col">l.campaign_id</span> = <span class="col">c.id</span>;</div>
-    <div style="margin-top:10px;">
-      <div class="tbl-title">Result — both tables merged into one</div>
-      <table class="tbl"><thead><tr><th>lead_name</th><th>campaign_name</th><th>channel</th><th>deal_value</th></tr></thead><tbody>
-        <tr><td>Riya Mehta</td><td>Q1 LinkedIn</td><td>LinkedIn</td><td>800,000</td></tr>
-        <tr><td>Arjun Nair</td><td>Google Ads Spring</td><td>Google</td><td>1,500,000</td></tr>
-        <tr><td>Priya Shah</td><td>Q1 LinkedIn</td><td>LinkedIn</td><td>650,000</td></tr>
-        <tr><td>Karan Bose</td><td>Email Nurture</td><td>Email</td><td>1,200,000</td></tr>
-      </tbody></table>
+
+    <div style="margin-top:14px;font-size:13px;font-weight:600;color:var(--text);margin-bottom:6px;">What SQL does behind the scenes:</div>
+    <p style="font-size:12px;color:var(--text-soft);margin-bottom:8px;">For each lead, SQL checks: "What's the campaign_id? Let me find that id in the campaigns table and glue them together."</p>
+
+    <div class="join-step-visual">
+      <div class="join-row-pair">
+        <div class="join-row-left">Riya — campaign_id = <strong>C1</strong></div>
+        <div class="join-row-arrow">→</div>
+        <div class="join-row-right">C1 = Q1 LinkedIn, LinkedIn</div>
+      </div>
+      <div class="join-row-pair">
+        <div class="join-row-left">Arjun — campaign_id = <strong>C2</strong></div>
+        <div class="join-row-arrow">→</div>
+        <div class="join-row-right">C2 = Google Ads Spring, Google</div>
+      </div>
+      <div class="join-row-pair">
+        <div class="join-row-left">Priya — campaign_id = <strong>C1</strong></div>
+        <div class="join-row-arrow">→</div>
+        <div class="join-row-right">C1 = Q1 LinkedIn, LinkedIn</div>
+      </div>
+      <div class="join-row-pair">
+        <div class="join-row-left">Karan — campaign_id = <strong>C3</strong></div>
+        <div class="join-row-arrow">→</div>
+        <div class="join-row-right">C3 = Email Nurture, Email</div>
+      </div>
     </div>
+    <p style="font-size:12px;color:var(--text-soft);margin:6px 0 10px;">Notice: Riya and Priya both link to C1, so they both get "Q1 LinkedIn". Same campaign, two different leads.</p>
+
+    <div class="arrow-down">↓</div>
+    <div style="font-size:13px;font-weight:600;color:var(--text);margin:4px 0 6px;">The result — one combined table</div>
+    <table class="tbl"><thead><tr><th>lead_name</th><th>campaign_name</th><th>channel</th><th>deal_value</th></tr></thead><tbody>
+      <tr><td>Riya Mehta</td><td>Q1 LinkedIn</td><td>LinkedIn</td><td>800,000</td></tr>
+      <tr><td>Arjun Nair</td><td>Google Ads Spring</td><td>Google</td><td>1,500,000</td></tr>
+      <tr><td>Priya Shah</td><td>Q1 LinkedIn</td><td>LinkedIn</td><td>650,000</td></tr>
+      <tr><td>Karan Bose</td><td>Email Nurture</td><td>Email</td><td>1,200,000</td></tr>
+    </tbody></table>
+  </div>
+
+  <!-- What happens when there's no match -->
+  <div class="card">
+    <div style="font-size:12px;color:var(--rose);font-weight:700;text-transform:uppercase;letter-spacing:.04em;margin-bottom:10px;">What if a row doesn't have a match?</div>
+    <p style="font-size:13px;color:var(--text);line-height:1.65;margin-bottom:10px;">
+      Say there's a campaign <strong>C4 — "Summer Sale"</strong> in the campaigns table, but <em>no lead</em> has <code>campaign_id = C4</code>. What happens?
+    </p>
+    <div class="join-step-visual">
+      <div class="join-row-pair no-match">
+        <div class="join-row-left">??? — no lead has C4</div>
+        <div class="join-row-arrow">✗</div>
+        <div class="join-row-right">C4 = Summer Sale — no match, dropped</div>
+      </div>
+    </div>
+    <p style="font-size:13px;color:var(--text);line-height:1.65;margin:10px 0;">
+      <strong>JOIN (aka INNER JOIN) drops unmatched rows entirely.</strong> If a campaign has no leads, it won't appear in your results. If a lead has no matching campaign, same thing — gone.
+    </p>
+
+    <div class="remember">
+      <strong>JOIN = "only show me rows that exist in BOTH tables."</strong> Think of it like a Venn diagram — you only get the overlap. This is the most common type of join, and the safest to start with. There are other types (like LEFT JOIN) that keep unmatched rows, but those are for later.
+    </div>
+  </div>
+
+  <!-- The dot notation explained clearly -->
+  <div class="card">
+    <div style="font-size:12px;color:var(--text-faint);font-weight:600;text-transform:uppercase;letter-spacing:.04em;margin-bottom:10px;">The dot (.) — your biggest new friend</div>
+    <p style="font-size:13px;color:var(--text);line-height:1.65;margin-bottom:10px;">
+      When you work with two tables, they might both have a column called <code>id</code>. If you just write <code>id</code>, SQL asks: "Which table's id? I see two!" The dot solves this:
+    </p>
+    <div class="compare-cols">
+      <div class="compare-bad">
+        <div class="compare-label">Ambiguous</div>
+        <code>SELECT id, lead_name ...</code>
+        <p style="margin-top:6px;font-size:11.5px;color:var(--rose);">Which table's id? Leads or campaigns? SQL doesn't know.</p>
+      </div>
+      <div class="compare-good">
+        <div class="compare-label">Clear</div>
+        <code>SELECT l.id, l.lead_name ...</code>
+        <p style="margin-top:6px;font-size:11.5px;color:var(--green);">l.id = "the id from the leads table". No confusion.</p>
+      </div>
+    </div>
+    <div class="tip"><span><strong>Good habit:</strong> When using JOIN, always use the dot prefix on <em>every</em> column, even if the name is unique. It makes your query easier to read and prevents errors if someone adds a column with the same name later.</span></div>
+  </div>
+
+  <!-- Common misconceptions -->
+  <div class="beginner-thought">
+    <div class="thought-wrong">"JOIN creates a new permanent table"</div>
+    <div class="thought-right">JOIN only creates a temporary combined view in your results. Your original tables are completely unchanged. It's like placing two Excel sheets side by side, drawing lines between matching rows, and reading across — the sheets themselves don't change.</div>
+  </div>
+
+  <div class="beginner-thought">
+    <div class="thought-wrong">"I need to memorize which table goes in FROM and which goes in JOIN"</div>
+    <div class="thought-right">It doesn't matter! <code>FROM leads JOIN campaigns</code> gives the same result as <code>FROM campaigns JOIN leads</code> (as long as the ON clause matches). Most people put their "main" table in FROM and the "lookup" table in JOIN, but SQL doesn't care about the order.</div>
+  </div>
+
+  <div class="beginner-thought">
+    <div class="thought-wrong">"The ON clause looks scary — I don't know what goes there"</div>
+    <div class="thought-right">There's a simple trick: find the <code>something_id</code> column. If the leads table has <code>campaign_id</code>, then your ON is: <code>leads.campaign_id = campaigns.id</code>. The <code>_id</code> column always points to the <code>id</code> of the other table. That's the pattern for 90% of joins you'll ever write.</div>
   </div>
 
   <div class="swap-box">
@@ -873,10 +1108,15 @@
     <div class="swap-block"><span class="kw">SELECT</span>  <span class="col">o.order_id</span>, <span class="col">c.customer_name</span>, <span class="col">o.amount</span>
 <span class="kw">FROM</span>    <span class="col">orders</span>    <span class="kw">AS</span> <span class="col">o</span>
 <span class="kw">JOIN</span>    <span class="col">customers</span> <span class="kw">AS</span> <span class="col">c</span>  <span class="kw">ON</span>  <span class="col">o.customer_id</span> = <span class="col">c.id</span>;</div>
-    <div style="font-size:12px;color:#8a7740;margin-top:6px;">Orders + Customers instead of Leads + Campaigns. The pattern is the same.</div>
+    <div style="font-size:12px;color:#8a7740;margin-top:6px;">Orders + Customers instead of Leads + Campaigns. The pattern is identical: find the <code>_id</code> column, match it to the other table's <code>id</code>.</div>
   </div>
 
-  <!-- Challenge: dot notation -->
+  <!-- At work scenario -->
+  <div class="at-work">
+    Your manager asks: <em>"I need a list of all orders with the customer name and email attached."</em> The orders table has <code>customer_id</code> but not the name. The customers table has the name but not the order details. JOIN brings them together. <strong>In real BA work, almost no useful report comes from just one table</strong> — you're always combining orders with customers, products with categories, employees with departments. JOIN is how you connect the dots.
+  </div>
+
+  <!-- Challenges with enhanced feedback -->
   <div class="challenge" data-answer="b">
     <div class="challenge-label">Check yourself</div>
     <div class="challenge-q">In the query above, what does <code>c.channel</code> mean?</div>
@@ -885,12 +1125,11 @@
       <button class="challenge-opt" data-choice="b">The <code>channel</code> column from the table nicknamed <code>c</code> (campaigns)</button>
       <button class="challenge-opt" data-choice="c">The letter "c" followed by the word "channel"</button>
     </div>
-    <div class="challenge-feedback fb-wrong" data-for="a">The dot isn't a function. It means "from this table, get this column". Think of it like an address: <code>campaigns.channel</code> = "the channel column that lives in the campaigns table".</div>
-    <div class="challenge-feedback fb-correct" data-for="b">Correct! <code>c</code> is the nickname for <code>campaigns</code> (from <code>AS c</code>). So <code>c.channel</code> = "the channel column from the campaigns table".</div>
-    <div class="challenge-feedback fb-wrong" data-for="c">The dot has a specific meaning — it separates the table nickname from the column name. <code>c.channel</code> means "the channel column from table c (campaigns)".</div>
+    <div class="challenge-feedback fb-wrong" data-for="a">Understandable guess — functions like <code>COUNT()</code> use parentheses, though: <code>COUNT(column)</code>. The dot is different. It's an address system: <code>table.column</code> = "from this table, get this column". Think of <code>c.channel</code> like a street address: "from the c table (campaigns), get the channel column". Functions use <code>()</code>, table addresses use <code>.</code></div>
+    <div class="challenge-feedback fb-correct" data-for="b">Exactly right! Here's how to read it: we wrote <code>campaigns AS c</code>, which means <code>c</code> is now a nickname for the campaigns table. So <code>c.channel</code> means "go to the campaigns table, find the channel column, bring that value". Every time you see <code>something.something</code>, read it as "from [table], get [column]". The other options confuse the dot for a function or just text — but the dot is always table-dot-column.</div>
+    <div class="challenge-feedback fb-wrong" data-for="c">The dot has a very specific meaning in SQL — it's not just punctuation. <code>c.channel</code> means "the channel column FROM the table called c". It's like an address: the part before the dot is the table, the part after is the column. We gave campaigns the nickname <code>c</code> (using <code>AS c</code>), so <code>c.channel</code> = <code>campaigns.channel</code>.</div>
   </div>
 
-  <!-- Challenge: ON clause -->
   <div class="challenge" data-answer="b">
     <div class="challenge-label">Check yourself</div>
     <div class="challenge-q">You're joining <code>orders</code> and <code>customers</code>. Orders has <code>customer_id</code>, customers has <code>id</code>. What goes after ON?</div>
@@ -899,9 +1138,27 @@
       <button class="challenge-opt" data-choice="b"><code>ON orders.customer_id = customers.id</code></button>
       <button class="challenge-opt" data-choice="c"><code>ON customer_id = id</code></button>
     </div>
-    <div class="challenge-feedback fb-wrong" data-for="a"><code>orders.id</code> is the order's own ID, not the link to customers. You need the column that <em>references</em> the other table: <code>orders.customer_id</code>.</div>
-    <div class="challenge-feedback fb-correct" data-for="b">Correct! <code>customer_id</code> in orders is the "link" column that points to <code>id</code> in customers. That's what ON connects.</div>
-    <div class="challenge-feedback fb-wrong" data-for="c">When using JOIN, always prefix column names with the table name (or nickname). Without the prefix, SQL might not know which table's <code>id</code> you mean. Use <code>orders.customer_id = customers.id</code>.</div>
+    <div class="challenge-feedback fb-wrong" data-for="a">Very common mistake! You're thinking "match id to id" — but <code>orders.id</code> is the <em>order's own ID number</em> (like order #1, order #2). It has nothing to do with customers. The column that <em>points to</em> the customer is <code>customer_id</code> — notice the name literally says "customer". Use the naming trick: <code>customer_id</code> → points to → <code>customers.id</code>. So it's <code>ON orders.customer_id = customers.id</code>.</div>
+    <div class="challenge-feedback fb-correct" data-for="b">Nailed it! Here's why this works: <code>customer_id</code> in orders is the link column — it stores the customer's ID number, like a reference. <code>id</code> in customers is the actual ID. You're saying: "find the customer whose ID matches this reference number." The naming pattern makes it easy: if you see <code>something_id</code>, it always points to <code>somethings.id</code>. Option A is wrong because <code>orders.id</code> is the order's own ID. Option C is missing the table prefix, which causes errors when both tables have <code>id</code>.</div>
+    <div class="challenge-feedback fb-wrong" data-for="c">You picked the right columns (<code>customer_id</code> and <code>id</code>), but forgot the table prefixes! Both tables have a column called <code>id</code> — orders.id (the order number) and customers.id (the customer number). Without the prefix, SQL sees just "id" and asks: "Which one?" Always write <code>orders.customer_id = customers.id</code>. In JOIN queries, get in the habit of prefixing <em>everything</em> with the table name.</div>
+  </div>
+
+  <!-- New challenge: finding the link column -->
+  <div class="challenge" data-answer="c">
+    <div class="challenge-label">Check yourself</div>
+    <div class="challenge-q">You have a <code>products</code> table and a <code>categories</code> table. Products has a column called <code>category_id</code>. How would you JOIN them?</div>
+    <div class="challenge-options">
+      <button class="challenge-opt" data-choice="a"><code>FROM products JOIN categories ON products.id = categories.id</code></button>
+      <button class="challenge-opt" data-choice="b"><code>FROM products JOIN categories ON categories.category_id = products.id</code></button>
+      <button class="challenge-opt" data-choice="c"><code>FROM products JOIN categories ON products.category_id = categories.id</code></button>
+    </div>
+    <div class="challenge-feedback fb-wrong" data-for="a">You're matching <code>products.id</code> (the product's own number) to <code>categories.id</code> (the category's number). Product #5 would match Category #5 — but that's a coincidence, not a real connection! The real link is <code>category_id</code> in products, which tells you which category each product belongs to. Use: <code>products.category_id = categories.id</code>.</div>
+    <div class="challenge-feedback fb-wrong" data-for="b">You flipped it! <code>category_id</code> lives in the <em>products</em> table (not categories). It's <code>products.category_id</code> that points to <code>categories.id</code>. Remember: the <code>_id</code> column is always in the table that's doing the referring. Products refer to categories, so <code>category_id</code> is in products.</div>
+    <div class="challenge-feedback fb-correct" data-for="c">You've got the pattern! <code>category_id</code> in products → points to → <code>id</code> in categories. You can use this trick for any JOIN: find the <code>something_id</code> column, and match it to <code>somethings.id</code>. Option A fails because it matches two unrelated ID columns. Option B puts <code>category_id</code> in the wrong table. Once you see this pattern, writing JOINs becomes mechanical.</div>
+  </div>
+
+  <div class="remember">
+    <strong>The JOIN recipe (works every time):</strong> 1) Identify the two tables you need. 2) Find the <code>_id</code> link column. 3) Write <code>FROM table1 JOIN table2 ON table1.link_id = table2.id</code>. 4) Use dot notation for every column in SELECT.
   </div>
 
   <div class="playground-cta">

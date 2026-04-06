@@ -849,6 +849,208 @@ body:not(.pg-body) .container {
   color: var(--text-faint);
 }
 
+/* ——— Beginner thought bubble ——— */
+.beginner-thought {
+  background: var(--rose-bg);
+  border: 1px dashed var(--rose-border);
+  border-radius: var(--radius-sm);
+  padding: 12px 14px;
+  margin: 14px 0;
+  font-size: 13px;
+  line-height: 1.55;
+  position: relative;
+}
+.beginner-thought::before {
+  content: 'Common beginner thinking';
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .06em;
+  color: var(--rose);
+  display: block;
+  margin-bottom: 6px;
+}
+.beginner-thought .thought-wrong {
+  color: var(--rose);
+  font-style: italic;
+  margin-bottom: 6px;
+}
+.beginner-thought .thought-right {
+  color: #3d5a25;
+  font-weight: 500;
+}
+.beginner-thought .thought-right::before {
+  content: 'Actually → ';
+  font-weight: 700;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: .04em;
+}
+
+/* ——— "At work" scenario box ——— */
+.at-work {
+  background: var(--blue-bg);
+  border-left: 3px solid var(--blue);
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  padding: 12px 14px;
+  margin: 14px 0;
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--text);
+}
+.at-work::before {
+  content: 'How you would use this at work';
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .06em;
+  color: var(--blue);
+  display: block;
+  margin-bottom: 6px;
+}
+.at-work strong { color: var(--blue); }
+
+/* ——— Comparison columns (good vs bad) ——— */
+.compare-cols {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin: 12px 0;
+}
+@media (max-width: 560px) { .compare-cols { grid-template-columns: 1fr; } }
+.compare-good, .compare-bad {
+  border-radius: var(--radius-sm);
+  padding: 10px 12px;
+  font-size: 12px;
+  line-height: 1.55;
+}
+.compare-good {
+  background: var(--green-bg);
+  border: 1px solid var(--green-border);
+}
+.compare-bad {
+  background: var(--rose-bg);
+  border: 1px solid var(--rose-border);
+}
+.compare-label {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .06em;
+  margin-bottom: 5px;
+}
+.compare-good .compare-label { color: var(--green); }
+.compare-bad .compare-label { color: var(--rose); }
+.compare-good .compare-label::before { content: '✓ '; }
+.compare-bad .compare-label::before { content: '✗ '; }
+.compare-good code, .compare-bad code {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  display: block;
+  margin-top: 4px;
+  padding: 6px 8px;
+  border-radius: 4px;
+}
+.compare-good code { background: rgba(255,255,255,.5); color: var(--green); }
+.compare-bad code { background: rgba(255,255,255,.5); color: var(--rose); }
+
+/* ——— "Which one?" visual for GROUP BY ——— */
+.which-one-visual {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 14px;
+  margin: 12px 0;
+  text-align: center;
+}
+.which-one-visual .wov-label {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-faint);
+  text-transform: uppercase;
+  letter-spacing: .04em;
+  margin-bottom: 8px;
+}
+.which-one-row {
+  display: flex;
+  gap: 6px;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin: 6px 0;
+}
+.which-one-item {
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  padding: 4px 10px;
+  border-radius: 4px;
+  background: var(--amber-bg);
+  border: 1px solid var(--amber-border);
+  color: var(--amber);
+}
+.which-one-question {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--rose);
+  margin-top: 8px;
+}
+
+/* ——— Join match visual ——— */
+.join-step-visual {
+  margin: 14px 0;
+}
+.join-row-pair {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 5px 0;
+  font-size: 12px;
+  font-family: var(--font-mono);
+}
+.join-row-left, .join-row-right {
+  padding: 6px 10px;
+  border-radius: 4px;
+  flex: 1;
+}
+.join-row-left {
+  background: var(--blue-bg);
+  border: 1px solid var(--blue-border);
+  color: var(--blue);
+  text-align: right;
+}
+.join-row-right {
+  background: var(--green-bg);
+  border: 1px solid var(--green-border);
+  color: var(--green);
+}
+.join-row-arrow {
+  font-size: 16px;
+  color: var(--text-faint);
+  flex-shrink: 0;
+}
+.join-row-pair.no-match {
+  opacity: 0.5;
+}
+.join-row-pair.no-match .join-row-right {
+  background: var(--rose-bg);
+  border-color: var(--rose-border);
+  color: var(--rose);
+  text-decoration: line-through;
+  font-style: italic;
+}
+
+/* ——— Inline callout (small, inline tip) ——— */
+.callout-inline {
+  display: inline-block;
+  font-size: 11.5px;
+  color: var(--text-soft);
+  background: var(--bg);
+  padding: 3px 8px;
+  border-radius: 4px;
+  border: 1px solid var(--border);
+  margin: 4px 0;
+  line-height: 1.5;
+}
+
 /* ——— Subtle noise texture ——— */
 body::before {
   content: '';
